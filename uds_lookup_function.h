@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "uds_lookup_base.h"
 #include "uds_response_data.h"
