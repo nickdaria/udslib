@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+
 #include "uds_lookup_base.h"
 
 typedef struct {
