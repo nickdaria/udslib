@@ -7,36 +7,10 @@
 
 typedef struct {
     /**
-     * @brief Byte length of data
-     * 
-     */
-    const size_t data_len;
-
-    /**
-     * @brief Mask to apply to data
-     * 
-     */
-    const uint8_t data_mask;
-
-    /**
-     * @brief Bit shift to apply to data
-     * 
-     */
-    const int8_t data_shift;
-
-    /**
-     * @brief If true, the data will be inverted before being used
-     * 
-     */
-    const bool data_invert_endianess;
-} uds_value_lookup_number_t;
-
-typedef struct {
-    /**
      * @brief Base structure for the lookup entry with name, ID and security level
      * 
      */
-    const uds_resource_t base;
+    uds_resource_t base;
 
     /**
      * @brief Pointer to read (NULL to disable)
@@ -57,8 +31,44 @@ typedef struct {
     uint8_t data_write_security_level;
 
     /**
-     * @brief Configuration for how the value is read/written
+     * @brief Byte length of data
      * 
      */
-    const uds_value_lookup_number_t data_cfg;
-} uds_value_lookup_t;
+    const size_t data_len;
+} uds_lookup_value_t;
+
+/**
+ * @brief Read only value lookup entry
+ * 
+ * @param id ID of value
+ * @param name Name of value (or NULL)
+ * @param security_level Security level required to read this value
+ * @param data_ptr Pointer to data to read
+ * @param data_len Length of data (typically just sizeof(DATA))
+ */
+uds_lookup_value_t uds_lookup_value_init_r(const uint16_t id, const char* name, const uint8_t security_level, const uint8_t* data_ptr, const size_t data_len);
+
+/**
+ * @brief Read/write value lookup entry that can read or write to the same pointer
+ * 
+ * @param id ID of value
+ * @param name Name of value (or NULL)
+ * @param security_level Security level required to read this value
+ * @param security_level_write Security level required to write this value
+ * @param data_ptr Pointer to data to R/W
+ * @param data_len Length of data - typically just sizeof(xxxxxxx)
+ */
+uds_lookup_value_t uds_lookup_value_init_rw(const uint16_t id, const char* name, const uint8_t security_level, const uint8_t security_level_write, uint8_t* data_ptr, const size_t data_len);
+
+/**
+ * @brief Read/write (w/ distinct pointers) value lookup entry. Useful for reading live data and writing to a mailbox or read-buffer.
+ * 
+ * @param id ID of value
+ * @param name Name of value (or NULL)
+ * @param security_level Security level required to read this value
+ * @param security_level_write Security level required to write this value
+ * @param data_read_ptr Pointer to read data from
+ * @param data_write_ptr Pointer to write data to (typically a queue/mailbox or read buffer)
+ * @param data_len Length of data - typically just sizeof(xxxxxxx)
+ */
+uds_lookup_value_t uds_lookup_value_init_rw_distinct(const uint16_t id, const char* name, const uint8_t security_level, const uint8_t security_level_write, const uint8_t* data_read_ptr, uint8_t* data_write_ptr, const size_t data_len);

@@ -52,4 +52,15 @@ typedef struct {
      * 
      */
     const uds_function_cb function;
-} uds_function_lookup_t;
+} uds_lookup_function_t;
+
+/**
+ * @brief Initialize a function/service lookup entry
+ * 
+ * @param id ID of function/service
+ * @param name Name (or NULL)
+ * @param security_level Security level required to access this service
+ * @param callback Callback function to run when this service is called
+ * @return uds_lookup_function_t Output structure
+ */
+uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* name, const uint8_t security_level, const uds_function_cb callback);

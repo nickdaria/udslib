@@ -12,3 +12,7 @@ typedef struct {
     uint8_t service_id;
     uint8_t error_code;
 } uds_response_data_t;
+
+/*
+    This struct is automatically populated by the session code
+*/
