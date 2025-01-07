@@ -23,7 +23,8 @@ typedef struct {
 
     /**
      * @brief Security level required to access this resource
-     *  0 = Always accessible
+     *  0 = Disabled/Inaccessible
+     *  1 = Default session
      */
     const uint8_t security_level;
 } uds_resource_t;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "uds_protocol.h"
 #include "uds_session.h"
 #include "uds_lookup_value.h"
 #include "uds_lookup_function.h"
