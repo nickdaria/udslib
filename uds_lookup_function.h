@@ -19,6 +19,12 @@ typedef struct {
     uds_resource_t* resource_id;
 
     /**
+     * @brief Security level when message handling was started
+     * 
+     */
+    uint8_t security_level;
+
+    /**
      * @brief Pointer to uds_session_t for the current session
      * 
      */
@@ -29,11 +35,10 @@ typedef struct {
  * @brief Function signature for callbacks run by function lookup
  * 
  */
-typedef void(*uds_function_cb)(
+typedef size_t(*uds_function_cb)(
     uds_function_context_t* context,
     uds_response_data_t* uds_response,
     uint8_t* response_data,
-    size_t* response_len,
     const size_t response_len_max
 );
 
@@ -53,6 +58,8 @@ typedef struct {
      * 
      */
     const uds_function_cb function;
+
+    //  TODO: Peek & error callbacks
 } uds_lookup_function_t;
 
 /**
@@ -65,3 +72,5 @@ typedef struct {
  * @return uds_lookup_function_t Output structure
  */
 uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* name, const uint8_t security_level, const uds_function_cb callback);
+
+bool uds_lookup_function(const uds_function_context_t uds_context, uds_response_data_t* uds_response, const uds_lookup_function_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len, size_t* response_ret_len);

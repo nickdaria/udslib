@@ -1,11 +1,11 @@
 #pragma once
 
-/**
- * @brief Indexes of UDS bytes in a message
- * 
- */
+
 #define UDS_PROTOCOL_SERVICE_IDX 0
-#define UDS_PROTOCOL_NACK_IDX 1
+#define UDS_PROTOCOL_HEADER_OFFSET UDS_PROTOCOL_SERVICE_IDX + 1
+
+#define UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX 1
+#define UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX 2
 
 /**
  * @brief Default session as defined by UDS protocol
@@ -63,6 +63,7 @@ typedef enum {
  * 
  */
 typedef enum {
+    UDS_NACK_OK = 0x00,
     UDS_NACK_GENERAL_REJECT = 0x10,
     UDS_NACK_SERVICE_NOT_SUPPORTED = 0x11,
     UDS_NACK_SUBFUNCTION_NOT_SUPPORTED = 0x12,

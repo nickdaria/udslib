@@ -8,8 +8,16 @@
  * 
  */
 typedef struct {
+    /**
+     * @brief False to disable sending a response
+     * 
+     */
     bool send_response;
-    uint8_t service_id;
+
+    /**
+     * @brief Error code response (0 = OK, > 0 = NACK/7F)
+     * 
+     */
     uint8_t error_code;
 } uds_response_data_t;
 
