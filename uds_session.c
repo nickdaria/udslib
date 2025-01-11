@@ -17,6 +17,8 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
     };
 
     uint8_t service_id = request_buf[UDS_PROTOCOL_SERVICE_IDX];
+    const uint8_t* data_without_header = request_buf + UDS_PROTOCOL_SERVICE_IDX + 1;
+    size_t data_without_header_len = request_len - UDS_PROTOCOL_SERVICE_IDX - 1;
 
     //  Offset response to make room for service ID
     uint8_t* offset_response = response_buf + 1;
@@ -27,6 +29,8 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
                                             &uds_response,
                                             service_id,
                                             session->security_level,
+                                            data_without_header,
+                                            data_without_header_len,
                                             session->services_table,
                                             session->services_table_len,
                                             offset_response,

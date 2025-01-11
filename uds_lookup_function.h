@@ -44,6 +44,8 @@ typedef struct {
 typedef size_t(*uds_function_cb)(
     const uds_function_context_t* context,
     uds_response_data_t* uds_response,
+    const uint8_t* data,
+    const size_t data_len,
     uint8_t* response_data,
     const size_t response_len_max
 );
@@ -86,6 +88,8 @@ uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* na
  * @param uds_response Response struct used to place UDS repsonse metadata
  * @param resource_id ID of the target resource
  * @param security_level Granted security level of the session
+ * @param data Data buffer from the request
+ * @param data_len Length of the data buffer
  * @param table Pointer to uds_lookup_function_t table
  * @param table_len Length of the uds_lookup_function_t table
  * @param response_data Buffer to place response data
@@ -94,7 +98,7 @@ uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* na
  * @return true Function found, run if security access allowed
  * @return false No function found
  */
-bool uds_lookup_function(const void* session, uds_response_data_t* uds_response, const uint16_t resource_id, const uint8_t security_level, const uds_lookup_function_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len, size_t* response_ret_len);
+bool uds_lookup_function(const void* session, uds_response_data_t* uds_response, const uint16_t resource_id, const uint8_t security_level, const uint8_t* data, const size_t data_len, const uds_lookup_function_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len, size_t* response_ret_len);
 
 #ifdef __cplusplus
 }
