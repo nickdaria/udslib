@@ -36,7 +36,7 @@ bool uds_lookup_function(const void* session, uds_response_data_t* uds_response,
                 uds_response->error_code = UDS_NACK_SECURITY_ACCESS_DENIED;
             }
 
-            //  Function called back
+            //  Function found
             return true;
         }
     }

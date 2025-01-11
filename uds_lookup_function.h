@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stdint.h>
+
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -73,5 +79,23 @@ typedef struct {
  */
 uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* name, const uint8_t security_level, const uds_function_cb callback);
 
-
+/**
+ * @brief Lookup a function and execute it with context if security access allows, otherwise return NACK security access denied
+ * 
+ * @param session Session to pass into functions
+ * @param uds_response Response struct used to place UDS repsonse metadata
+ * @param resource_id ID of the target resource
+ * @param security_level Granted security level of the session
+ * @param table Pointer to uds_lookup_function_t table
+ * @param table_len Length of the uds_lookup_function_t table
+ * @param response_data Buffer to place response data
+ * @param response_len Total length of response data buffer
+ * @param response_ret_len Returned length of response data
+ * @return true Function found, run if security access allowed
+ * @return false No function found
+ */
 bool uds_lookup_function(const void* session, uds_response_data_t* uds_response, const uint16_t resource_id, const uint8_t security_level, const uds_lookup_function_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len, size_t* response_ret_len);
+
+#ifdef __cplusplus
+}
+#endif

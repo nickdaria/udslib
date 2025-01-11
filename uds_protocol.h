@@ -1,5 +1,8 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define UDS_PROTOCOL_SERVICE_IDX 0
 #define UDS_PROTOCOL_HEADER_OFFSET UDS_PROTOCOL_SERVICE_IDX + 1
@@ -136,3 +139,7 @@ typedef enum {
     UDS_ECU_RESET_KEY_OFF_ON = 0x02,
     UDS_ECU_RESET_SOFT = 0x03,
 } uds_protocol_ecu_reset_type_t;
+
+#ifdef __cplusplus
+}
+#endif

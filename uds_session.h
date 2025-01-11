@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -46,3 +50,7 @@ void uds_session_init(uds_session_t* session, uds_lookup_function_t* services_ta
  * @return size_t 
  */
 size_t uds_session_process_request(uds_session_t* session, const uint8_t* request_buf, const size_t request_len, uint8_t* response_buf, const size_t response_buf_len);
+
+#ifdef __cplusplus
+}
+#endif

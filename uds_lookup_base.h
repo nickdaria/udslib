@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -28,3 +32,7 @@ typedef struct {
      */
     const uint8_t security_level;
 } uds_resource_t;
+
+#ifdef __cplusplus
+}
+#endif

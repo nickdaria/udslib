@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -21,6 +25,6 @@ typedef struct {
     uint8_t error_code;
 } uds_response_data_t;
 
-/*
-    This struct is automatically populated by the session code
-*/
+#ifdef __cplusplus
+}
+#endif
