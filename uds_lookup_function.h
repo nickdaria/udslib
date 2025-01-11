@@ -16,7 +16,7 @@ typedef struct {
      * @brief Pointer to the resource information for the current function
      * 
      */
-    uds_resource_t* resource_id;
+    uds_resource_t* resource;
 
     /**
      * @brief Security level when message handling was started
@@ -28,7 +28,7 @@ typedef struct {
      * @brief Pointer to uds_session_t for the current session
      * 
      */
-    void* uds_session_t;
+    void* uds_session;
 } uds_function_context_t;
 
 /**
@@ -36,7 +36,7 @@ typedef struct {
  * 
  */
 typedef size_t(*uds_function_cb)(
-    uds_function_context_t* context,
+    const uds_function_context_t* context,
     uds_response_data_t* uds_response,
     uint8_t* response_data,
     const size_t response_len_max

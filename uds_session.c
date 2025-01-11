@@ -30,7 +30,7 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
                                             session->services_table, 
                                             session->services_table_len,
                                             offset_response,
-                                            &offset_response_len,
+                                            offset_response_len,
                                             &service_response_len);
 
     //  Override NACK code
@@ -41,12 +41,12 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
 
     //  Build response
     if(uds_response.error_code == UDS_NACK_OK) {
-        response_buf[UDS_PROTOCOL_SERVICE_IDX] = services_context.resource_id;
+        response_buf[UDS_PROTOCOL_SERVICE_IDX] = services_context.resource->id;
         return UDS_PROTOCOL_HEADER_OFFSET + service_response_len;
     }
     else {
         response_buf[UDS_PROTOCOL_SERVICE_IDX] = UDS_SERVICE_NEGATIVE_RESPONSE;
-        response_buf[UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX] = services_context.resource_id;
+        response_buf[UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX] = services_context.resource->id;
         response_buf[UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX] = uds_response.error_code;
         return UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX + 1;
     }
