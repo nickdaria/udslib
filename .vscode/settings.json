@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "cstdint": "c",
-        "udslib.h": "c"
+        "udslib.h": "c",
+        "uds_lookup_function.h": "c",
+        "uds_lookup_base.h": "c",
+        "uds_response_data.h": "c"
     }
 }

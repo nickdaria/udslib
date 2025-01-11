@@ -13,6 +13,8 @@
  */
 #define UDS_PROTOCOL_DEFAULT_SESSION 0x01
 
+#define UDS_PROTOCOL_POS_ACK_OFFSET 0x40
+
 /**
  * @brief All standard UDS services (stored as request values)
  * 

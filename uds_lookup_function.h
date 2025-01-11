@@ -16,13 +16,13 @@ typedef struct {
      * @brief Pointer to the resource information for the current function
      * 
      */
-    uds_resource_t* resource;
+    const uds_resource_t* resource;
 
     /**
      * @brief Security level when message handling was started
      * 
      */
-    uint8_t security_level;
+    const uint8_t security_level;
 
     /**
      * @brief Pointer to uds_session_t for the current session
@@ -73,4 +73,5 @@ typedef struct {
  */
 uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* name, const uint8_t security_level, const uds_function_cb callback);
 
-bool uds_lookup_function(const uds_function_context_t uds_context, uds_response_data_t* uds_response, const uds_lookup_function_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len, size_t* response_ret_len);
+
+bool uds_lookup_function(const void* session, uds_response_data_t* uds_response, const uint16_t resource_id, const uint8_t security_level, const uds_lookup_function_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len, size_t* response_ret_len);
