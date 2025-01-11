@@ -5,7 +5,7 @@
             "name": "Debug UDS Playground",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/example/uds_playground.exe",
+            "program": "${workspaceFolder}/examples/console_playground/console_playground.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
