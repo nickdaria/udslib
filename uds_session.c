@@ -19,8 +19,8 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
     uint8_t service_id = request_buf[UDS_PROTOCOL_SERVICE_IDX];
 
     //  Offset response to make room for service ID
-    uint8_t* offset_response = response_buf + UDS_PROTOCOL_HEADER_OFFSET;
-    size_t offset_response_len = response_buf_len - UDS_PROTOCOL_HEADER_OFFSET;
+    uint8_t* offset_response = response_buf + 1;
+    size_t offset_response_len = response_buf_len - 1;
 
     size_t service_response_len = 0;
     bool service_found = uds_lookup_function(session,
@@ -42,7 +42,7 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
     //  Build response
     if(uds_response.error_code == UDS_NACK_OK) {
         response_buf[UDS_PROTOCOL_SERVICE_IDX] = service_id + UDS_PROTOCOL_POS_ACK_OFFSET;
-        return UDS_PROTOCOL_HEADER_OFFSET + service_response_len;
+        return service_response_len + 1;
     }
     else {
         response_buf[UDS_PROTOCOL_SERVICE_IDX] = UDS_SERVICE_NEGATIVE_RESPONSE;
