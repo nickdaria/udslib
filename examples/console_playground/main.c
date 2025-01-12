@@ -4,7 +4,91 @@
 #include <stdlib.h>
 #include <udslib.h>
 
+size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max);
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max);
+size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max);
+
+
 uds_session_t session;
+
+uint8_t test_8 = 0x12;
+uint16_t test_16 = 0x1234;
+uint32_t test_32 = 0x12345678;
+uint64_t test_64 = 0x1234567890ABDEF0;
+
+uds_lookup_value_t values[] = {
+    {
+        .base = {
+            .id = 0x1234,
+            .name = "Test 8",
+            .security_level = 0x00
+        },
+        .data_len = sizeof(test_8),
+        .data_read_ptr = &test_8,
+        .data_write_ptr = &test_8,
+        .data_write_security_level = 0xC0
+    },
+    {
+        .base = {
+            .id = 0x1235,
+            .name = "Test 16",
+            .security_level = 0xC0
+        },
+        .data_len = sizeof(test_16),
+        .data_read_ptr = &test_16,
+        .data_write_ptr = NULL,
+        .data_write_security_level = 0x00
+    },
+    {
+        .base = {
+            .id = 0x1236,
+            .name = "Test 32",
+            .security_level = 0xC0
+        },
+        .data_len = sizeof(test_32),
+        .data_read_ptr = &test_32,
+        .data_write_ptr = &test_32,
+        .data_write_security_level = 0xC0
+    },
+    {
+        .base = {
+            .id = 0x1237,
+            .name = "Test 64",
+            .security_level = 0xC0
+        },
+        .data_len = sizeof(test_64),
+        .data_read_ptr = &test_64,
+        .data_write_ptr = &test_64,
+        .data_write_security_level = 0xC0
+    }
+};
+
+uds_lookup_function_t services[] = {
+    {
+        .base = {
+            .id = UDS_SERVICE_DIAGNOSTIC_SESSION_CONTROL,
+            .name = "Diagnostic Session Control",
+            .security_level = 1
+        },
+        .function = service_diagnostic_session_control
+    },
+    {
+        .base = {
+            .id = UDS_SERVICE_READ_DATA_BY_IDENTIFIER,
+            .name = "Read Data By Identifier",
+            .security_level = 1
+        },
+        .function = service_read_by_local_id
+    },
+    {
+        .base = {
+            .id = UDS_SERVICE_WRITE_DATA_BY_IDENTIFIER,
+            .name = "Write Data By Identifier",
+            .security_level = 0x30
+        },
+        .function = service_write_by_local_id
+    }
+};
 
 void cmd_help() {
     printf("[Simple desktop playground for testing udslib]\n");
@@ -98,58 +182,53 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     printf("Read by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
-    //  Return a response
-    response_data[0] = 0x01;
-    response_data[1] = 0x02;
-    response_data[2] = 0x03;
-    response_data[3] = 0x04;
+    //  Length check
+    if(data_len != 2) {
+        uds_response->error_code = UDS_NACK_INVALID_FORMAT;
+        return 0;
+    }
 
-    uds_response->error_code = UDS_NACK_OK;
-    uds_response->send_response = true;
-    return 4;
+    //  Get local ID
+    uint16_t local_id = (data[0] << 8) | data[1];
+
+    //  Prepare response buffer
+    response_data[0] = local_id >> 8;
+    response_data[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = response_data + 2;
+    size_t shifted_response_len_max = response_len_max - 2;
+
+    //  Find and return
+    size_t return_len = uds_lookup_value_read(context->uds_session, uds_response, local_id, context->security_level, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);
+    return return_len + 2;
 }
 
 size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max) {
     printf("Write by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
-    //  Return a response
-    response_data[0] = 0x01;
-    response_data[1] = 0x02;
-    response_data[2] = 0x03;
-    response_data[3] = 0x04;
-
-    uds_response->error_code = UDS_NACK_OK;
-    uds_response->send_response = true;
-    return 4;
-}
-
-uds_lookup_function_t services[] = {
-    {
-        .base = {
-            .id = UDS_SERVICE_DIAGNOSTIC_SESSION_CONTROL,
-            .name = "Diagnostic Session Control",
-            .security_level = 1
-        },
-        .function = service_diagnostic_session_control
-    },
-    {
-        .base = {
-            .id = UDS_SERVICE_READ_DATA_BY_IDENTIFIER,
-            .name = "Read Data By Identifier",
-            .security_level = 1
-        },
-        .function = service_read_by_local_id
-    },
-    {
-        .base = {
-            .id = UDS_SERVICE_WRITE_DATA_BY_IDENTIFIER,
-            .name = "Write Data By Identifier",
-            .security_level = 0x30
-        },
-        .function = service_write_by_local_id
+    //  Length check
+    if(data_len < 2) {
+        uds_response->error_code = UDS_NACK_INVALID_FORMAT;
+        return 0;
     }
-};
+
+    //  Get local ID
+    uint16_t local_id = (data[0] << 8) | data[1];
+
+    //  Shifted input buffer to pass in
+    const uint8_t* shifted_data = data + 2;
+    size_t shifted_data_len = data_len - 2;
+
+    //  Prepare response buffer
+    response_data[0] = local_id >> 8;
+    response_data[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = response_data + 2;
+    size_t shifted_response_len_max = response_len_max - 2;
+
+    //  Find and write
+    size_t ret_len = uds_lookup_value_write(context->uds_session, uds_response, local_id, context->security_level, shifted_data, shifted_data_len, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);
+    return ret_len + 2;
+}
 
 //  Main loop
 void playground() {

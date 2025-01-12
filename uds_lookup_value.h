@@ -6,8 +6,10 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "uds_lookup_base.h"
+#include "uds_response_data.h"
 
 typedef struct {
     /**
@@ -20,13 +22,13 @@ typedef struct {
      * @brief Pointer to read (NULL to disable)
      * 
      */
-    const uint8_t* data_read_ptr;
+    const void* data_read_ptr;
 
     /**
      * @brief Pointer to write (NULL to disable)
      * 
      */
-    uint8_t* data_write_ptr;
+    void* data_write_ptr;
 
     /**
      * @brief Security level required to write to this value
@@ -40,6 +42,12 @@ typedef struct {
      */
     const size_t data_len;
 } uds_lookup_value_t;
+
+//  TODO: Docs
+size_t uds_lookup_value_read(const void* session, uds_response_data_t* uds_response, const uint16_t resource_id, const uint8_t security_level, const uds_lookup_value_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len);
+
+//  TODO: Docs
+size_t uds_lookup_value_write(const void* session, uds_response_data_t* uds_response, const uint16_t resource_id, const uint8_t security_level, const uint8_t* data, const size_t data_len, const uds_lookup_value_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len);
 
 /**
  * @brief Read only value lookup entry

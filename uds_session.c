@@ -24,18 +24,18 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
     uint8_t* offset_response = response_buf + 1;
     size_t offset_response_len = response_buf_len - 1;
 
-    size_t service_response_len = 0;
-    bool service_found = uds_lookup_function(session,
-                                            &uds_response,
-                                            service_id,
-                                            session->security_level,
-                                            data_without_header,
-                                            data_without_header_len,
-                                            session->services_table,
-                                            session->services_table_len,
-                                            offset_response,
-                                            offset_response_len,
-                                            &service_response_len);
+    bool service_found = false;
+    size_t service_response_len = uds_lookup_function(session,
+                                                    &uds_response,
+                                                    service_id,
+                                                    session->security_level,
+                                                    data_without_header,
+                                                    data_without_header_len,
+                                                    session->services_table,
+                                                    session->services_table_len,
+                                                    offset_response,
+                                                    offset_response_len,
+                                                    &service_found);
 
     //  Override NACK code
     if(!service_found) {

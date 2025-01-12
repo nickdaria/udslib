@@ -71,17 +71,6 @@ typedef struct {
 } uds_lookup_function_t;
 
 /**
- * @brief Initialize a function/service lookup entry
- * 
- * @param id ID of function/service
- * @param name Name (or NULL)
- * @param security_level Security level required to access this service
- * @param callback Callback function to run when this service is called
- * @return uds_lookup_function_t Output structure
- */
-uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* name, const uint8_t security_level, const uds_function_cb callback);
-
-/**
  * @brief Lookup a function and execute it with context if security access allows, otherwise return NACK security access denied
  * 
  * @param session Session to pass into functions
@@ -94,11 +83,32 @@ uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* na
  * @param table_len Length of the uds_lookup_function_t table
  * @param response_data Buffer to place response data
  * @param response_len Total length of response data buffer
- * @param response_ret_len Returned length of response data
- * @return true Function found, run if security access allowed
- * @return false No function found
+ * @param ret_found Returns true if function was found in table
+ * @return size_t Length of response data placed in response_data buffer
  */
-bool uds_lookup_function(const void* session, uds_response_data_t* uds_response, const uint16_t resource_id, const uint8_t security_level, const uint8_t* data, const size_t data_len, const uds_lookup_function_t* table, const size_t table_len, uint8_t* response_data, const size_t response_len, size_t* response_ret_len);
+size_t uds_lookup_function(const void* session, 
+                            uds_response_data_t* uds_response, 
+                            const uint16_t resource_id, 
+                            const uint8_t security_level, 
+                            const uint8_t* data, 
+                            const size_t data_len, 
+                            const uds_lookup_function_t* table, 
+                            const size_t table_len, 
+                            uint8_t* response_data, 
+                            const size_t response_len, 
+                            bool* ret_found);
+
+
+/**
+ * @brief Initialize a function/service lookup entry
+ * 
+ * @param id ID of function/service
+ * @param name Name (or NULL)
+ * @param security_level Security level required to access this service
+ * @param callback Callback function to run when this service is called
+ * @return uds_lookup_function_t Output structure
+ */
+uds_lookup_function_t uds_lookup_function_init(const uint16_t id, const char* name, const uint8_t security_level, const uds_function_cb callback);
 
 #ifdef __cplusplus
 }
