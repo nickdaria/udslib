@@ -8,14 +8,22 @@ This library solely focuses on implementation of the UDS protocol. As UDS is oft
 
 # 🚀 Features
 - UDS session management
-- Security access level support with granular permissions
-- Easily build function and variable lookup tables
-- Pure C, platform agnostic w/ C++/Arduino compatibility
+- Sending requests:
+  - Standard services provided
+  - Extremely easy to implement proprietary services
+- Pure C, platform agnostic with C++/Arduino compatibility
 - No dynamic code allocation required
 - Tight scope, no bloat
 
 
 # ⚡️ Advanced Features
+- Handling requests:
+  - Easily build resource lookup tables:
+    - Services
+    - Local IDs
+    - Functions
+  - Manage security access to resources easily
+  - Readable and easy to implement
 - Multiple concurrent sessions
 - Peek at multi-packet data before full transfer completion
 - Optional user-defined dynamic memory allocation
