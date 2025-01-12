@@ -7,7 +7,7 @@ void uds_session_init(uds_session_t* session, uds_lookup_function_t* services_ta
 }
 
 /*
-    Under the hood, service lookup is just the same as a function lookup, but with a specific byte for the resource ID
+    Under the hood, service lookup is just the same as a function lookup, but has special handling for the service ID byte and NACK responses
 */
 size_t uds_session_process_request(uds_session_t* session, const uint8_t* request_buf, const size_t request_len, uint8_t* response_buf, const size_t response_buf_len) {
     //  Build response
