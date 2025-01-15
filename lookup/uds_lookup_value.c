@@ -1,6 +1,7 @@
-#include "uds_lookup_value.h"
-#include "uds_protocol.h"
 #include <string.h>
+
+#include "uds_lookup_value.h"
+#include "../protocol/uds_negative_response.h"
 
 /*
     Read Handler

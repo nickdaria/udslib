@@ -4,10 +4,20 @@
 extern "C" {
 #endif
 
-#include "uds_protocol.h"
-#include "uds_session.h"
-#include "uds_lookup_value.h"
-#include "uds_lookup_function.h"
+/*
+    udslib
+        - uds_session.h - set up a table of services and handle requests
+        - uds_protocol.h - constants used by the library from the UDS ISO 14229-1 standard
+        - uds_lookup_value.h - build a lookup table of values to read and/or write
+        - uds_lookup_function.h - build a lookup table of functions to call
+        - uds_services.h - structs, decoding, and encoding for ISO 14299-1 services
+*/
+
+#include "session/uds_session.h"
+#include "protocol/uds_protocol.h"
+#include "services/uds_services.h"
+#include "lookup/uds_lookup_value.h"
+#include "lookup/uds_lookup_function.h"
 
 #define UDSLIB_VERSION_MAJOR         0
 #define UDSLIB_VERSION_MINOR         1

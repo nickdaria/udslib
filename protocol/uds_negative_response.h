@@ -5,81 +5,6 @@ extern "C" {
 #endif
 
 /**
- * @brief Index in a transmission buffer of the UDS service byte
- * 
- */
-#define UDS_PROTOCOL_SERVICE_IDX 0
-
-/**
- * @brief Index in a negative response buffer of the service ID
- * 
- */
-#define UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX 1
-
-/**
- * @brief Index in a negative response buffer of the error code
- * 
- */
-#define UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX 2
-
-/**
- * @brief Default session as defined by UDS protocol
- * 
- */
-#define UDS_PROTOCOL_DEFAULT_SESSION 0x01
-
-/**
- * @brief Service byte offset for positive acknowledgement
- * 
- */
-#define UDS_PROTOCOL_POS_ACK_OFFSET 0x40
-
-/**
- * @brief All standard UDS services (stored as request values)
- * 
- */
-typedef enum {
-    //  Diagnostic and Communications Management
-    UDS_SERVICE_DIAGNOSTIC_SESSION_CONTROL = 0x10,
-    UDS_SERVICE_ECU_RESET = 0x11,
-    UDS_SERVICE_SECURITY_ACCESS = 0x27,
-    UDS_SERVICE_COMMUNICATION_CONTROL = 0x28,
-    UDS_SERVICE_AUTHENTICATION = 0x29,
-    UDS_SERVICE_TESTER_PRESENT = 0x3E,
-    UDS_SERVICE_ACCESS_TIMING_PARAMETERS = 0x83,
-    UDS_SERVICE_SECURED_DATA_TRANSMISSION = 0x84,
-    UDS_SERVICE_CONTROL_DTC_SETTINGS = 0x85,
-    UDS_SERVICE_RESPONSE_ON_EVENT = 0x86,
-    UDS_SERVICE_LINK_CONTROL = 0x87,
-
-    // Data Transmission
-    UDS_SERVICE_READ_DATA_BY_IDENTIFIER = 0x22,
-    UDS_SERVICE_READ_MEMORY_BY_ADDRESS = 0x23,
-    UDS_SERVICE_READ_SCALING_DATA_BY_IDENTIFIER = 0x24,
-    UDS_SERVICE_READ_DATA_BY_IDENTIFIER_PERIODIC = 0x2A,
-    UDS_SERVICE_DYNAMICALLY_DEFINE_DATA_IDENTIFIER = 0x2C,
-    UDS_SERVICE_WRITE_DATA_BY_IDENTIFIER = 0x2E,
-    UDS_SERVICE_WRITE_MEMORY_BY_ADDRESS = 0x3D,
-
-    // Stored Data Transmission
-    UDS_SERVICE_CLEAR_DIAGNOSTIC_INFORMATION = 0x14,
-    UDS_SERVICE_READ_DTC_INFORMATION = 0x19,
-
-    //  Input/Output Control
-    UDS_SERVICE_INPUT_OUTPUT_CONTROL_BY_IDENTIFIER = 0x2F,
-
-    //  Remote Activation of Routine
-    UDS_SERVICE_REQUEST_DOWNLOAD = 0x34,
-    UDS_SERVICE_REQUEST_UPLOAD = 0x35,
-    UDS_SERVICE_TRANSFER_DATA = 0x36,
-    UDS_SERVICE_REQUEST_TRANSFER_EXIT = 0x37,
-    UDS_SERVICE_REQUEST_FILE_TRANSFER = 0x38,
-
-    //  Negative Response
-    UDS_SERVICE_NEGATIVE_RESPONSE = 0x7F
-} uds_protocol_services_t;
-
-/**
  * @brief Negative response (NACK) codes
  * 
  */
@@ -144,17 +69,7 @@ typedef enum {
     UDS_NACK_VOLTAGE_TOO_HIGH = 0x92,
     UDS_NACK_VOLTAGE_TOO_LOW = 0x93,
     UDS_NACK_RESOURCE_TEMPORARILY_UNAVAILABLE = 0x94
-} uds_protocol_negative_response_codes;
-
-/**
- * @brief Types of ECU reset requests
- * 
- */
-typedef enum {
-    UDS_ECU_RESET_HARD = 0x01,
-    UDS_ECU_RESET_KEY_OFF_ON = 0x02,
-    UDS_ECU_RESET_SOFT = 0x03,
-} uds_protocol_ecu_reset_type_t;
+} uds_protocol_negativeResponseCode_t;
 
 #ifdef __cplusplus
 }

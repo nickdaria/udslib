@@ -1,5 +1,5 @@
 #include "uds_lookup_function.h"
-#include "uds_protocol.h"
+#include "../protocol/uds_negative_response.h"
 
 size_t function_run(const void* session, 
                     uds_response_data_t* uds_response, 

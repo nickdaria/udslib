@@ -1,12 +1,12 @@
 #ifdef __cplusplus
 
+//  This is basically to make Arduino environments happy
 extern "C" {
-    #include "uds_session.h"
-    #include "uds_lookup_value.h"
-    #include "uds_lookup_function.h"
-    #include "uds_protocol.h"
-    #include "uds_response_data.h"
-    #include "uds_lookup_base.h"
+    #include "session/uds_session.h"
+    #include "protocol/uds_protocol.h"
+    #include "services/uds_services.h"
+    #include "lookup/uds_lookup_value.h"
+    #include "lookup/uds_lookup_function.h"
 }
 
 #endif

@@ -7,8 +7,8 @@ extern "C" {
 #include <stdint.h>
 #include <stddef.h>
 
-#include "uds_protocol.h"
-#include "uds_lookup_function.h"
+#include "../protocol/uds_protocol.h"
+#include "../lookup/uds_lookup_function.h"
 
 typedef struct {
     /**

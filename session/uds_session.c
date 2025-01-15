@@ -1,4 +1,6 @@
 #include "uds_session.h"
+#include "../protocol/uds_negative_response.h"
+#include "../protocol/uds_services.h"
 
 void uds_session_init(uds_session_t* session, uds_lookup_function_t* services_table, size_t services_table_len) {
     session->security_level = UDS_PROTOCOL_DEFAULT_SESSION;
