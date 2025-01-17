@@ -27,29 +27,35 @@ extern "C" {
         - 0x33: Security access denied
 */
 
-//  Indexes
-#define UDS_PROTOCOL_22_DID_IDX_MSB 1
-#define UDS_PROTOCOL_22_DID_IDX_LSB 2
-#define UDS_PROTOCOL_22_DATA_IDX 3
-
-//  Wrapper struct
 typedef struct {
-    //  Identifiers in request
-    uint16_t* dataIdentifier;
-    size_t dataIdentifier_len;
+    //  Identifier data array & data length array
+    uint16_t* data_identifier;
+    size_t* data_identifier_len;
 
-    //  Data to send
-    void* value;
+    //  Count of elements
+    size_t elements_count;
+} uds_0x22_query;
 
-    //  Individual lengths of data elements
-    size_t* value_len;
-} uds_protocol_22_readDataByIdentifier_t;
+typedef struct {
+    //  Associated request
+    uds_0x22_query query;
 
-//  Extract Function
-bool uds_protocol_22_readDataByIdentifier_decode(uds_protocol_22_readDataByIdentifier_t* ret, const uint8_t* buf, const size_t buf_len);
+    //  Data
+    void* data_identifier_value;
+    size_t* data_identifier_value_len;
+} uds_0x22_response;
 
-//  Encode Function
-bool uds_protocol_22_readDataByIdentifier_encode(uds_protocol_22_readDataByIdentifier_t* in, uint8_t* buf, size_t buf_len);
+//  Encoding outgoing response
+size_t uds_0x22_encode_response(const uds_0x22_query* query, const uds_0x22_response* response, void* buf);
+
+//  Decoding incoming response
+uds_protocol_negativeResponseCode_t uds_0x22_decode_response(uds_0x22_response* response, const void* buf, const size_t len);
+
+//  Encoding outgoing request
+size_t uds_0x22_encode_query(const uds_0x22_query* query, void* buf);
+
+//  Decoding incoming request
+uds_protocol_negativeResponseCode_t uds_0x22_decode_query(uds_0x22_query* query, const void* buf, const size_t len);
 
 #ifdef __cplusplus
 }
