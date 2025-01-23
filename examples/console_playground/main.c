@@ -179,11 +179,11 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
     }
 
     //  Enter requested level
-    session->security_level = ((uint8_t*)buffers->request_data)[0];
+    session->security_level = buffers->request_data[0];
 
     //  Return positive response
     uds_response->error_code = UDS_NRC_PR;
-    ((uint8_t*)buffers->response_data)[0] = ((uint8_t*)buffers->request_data)[0];
+    buffers->response_data[0] = buffers->request_data[0];
     return 1;
 }
 
@@ -198,12 +198,12 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     }
 
     //  Get local ID
-    uint16_t local_id = (((uint8_t*)buffers->request_data)[0] << 8) | ((uint8_t*)buffers->request_data)[1];
+    uint16_t local_id = (buffers->request_data[0] << 8) | buffers->request_data[1];
 
     //  Prepare response buffer
-    ((uint8_t*)buffers->response_data)[0] = local_id >> 8;
-    ((uint8_t*)buffers->response_data)[1] = local_id & 0xFF;
-    uint8_t* shifted_response_data = ((uint8_t*)buffers->response_data) + 2;
+    buffers->response_data[0] = local_id >> 8;
+    buffers->response_data[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = buffers->response_data + 2;
     size_t shifted_response_len_max = buffers->response_buf_len - 2;
 
     //  Find and return
@@ -222,16 +222,16 @@ size_t service_write_by_local_id(const uds_function_context_t* context, uds_resp
     }
 
     //  Get local ID
-    uint16_t local_id = (((uint8_t*)buffers->request_data)[0] << 8) | ((uint8_t*)buffers->request_data)[1];
+    uint16_t local_id = (buffers->request_data[0] << 8) | buffers->request_data[1];
 
     //  Shifted input buffer to pass in
-    const uint8_t* shifted_data = ((uint8_t*)buffers->request_data) + 2;
+    const uint8_t* shifted_data = buffers->request_data + 2;
     size_t shifted_data_len = buffers->request_len - 2;
 
     //  Prepare response buffer
-    ((uint8_t*)buffers->response_data)[0] = local_id >> 8;
-    ((uint8_t*)buffers->response_data)[1] = local_id & 0xFF;
-    uint8_t* shifted_response_data = ((uint8_t*)buffers->response_data) + 2;
+    buffers->response_data[0] = local_id >> 8;
+    buffers->response_data[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = buffers->response_data + 2;
     size_t shifted_response_len_max = buffers->response_buf_len - 2;
 
     //  Find and write

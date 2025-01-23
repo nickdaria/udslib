@@ -46,16 +46,16 @@ typedef struct {
 } UDS_11_ER_query_t;
 
 //  Encoding outgoing response
-size_t UDS_11_ER_response_encode(const UDS_11_ER_query_t* query, const UDS_NRC_t response, void* buf, const size_t buf_len);
+size_t UDS_11_ER_response_encode(const UDS_11_ER_query_t* query, const UDS_NRC_t response, uint8_t* buf, const size_t buf_len);
 
 //  Decoding incoming response
-UDS_NRC_t UDS_11_ER_response_decode(UDS_11_ER_query_t* response, const void* buf, const size_t len);
+UDS_NRC_t UDS_11_ER_response_decode(UDS_11_ER_query_t* response, const uint8_t* buf, const size_t buf_len);
 
 //  Encoding outgoing request
-size_t UDS_11_ER_request_encode(const UDS_11_ER_query_t* query, void* buf);
+size_t UDS_11_ER_request_encode(const UDS_11_ER_query_t* query, uint8_t* buf, const size_t buf_len);
 
 //  Decoding incoming request
-UDS_NRC_t UDS_11_ER_request_decode(UDS_11_ER_query_t* query, const void* buf, const size_t len);
+UDS_NRC_t UDS_11_ER_request_decode(UDS_11_ER_query_t* query, const uint8_t* buf, const size_t buf_len);
 
 #ifdef __cplusplus
 }

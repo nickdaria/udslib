@@ -38,10 +38,10 @@ typedef struct {
  * 
  */
 typedef struct {
-    const void* request_data;
+    const uint8_t* request_data;
     const size_t request_len;
 
-    void* response_data;
+    uint8_t* response_data;
     const size_t response_buf_len;
 } uds_buffers_t;
 

@@ -47,13 +47,13 @@ size_t uds_session_process_request(uds_session_t* session, uds_buffers_t* buffer
 
     //  Build response
     if(uds_response.error_code == UDS_NRC_PR) {
-        ((uint8_t*)buffers->response_data)[UDS_PROTOCOL_SERVICE_IDX] = service_id + UDS_PROTOCOL_POS_ACK_OFFSET;
+        buffers->response_data[UDS_PROTOCOL_SERVICE_IDX] = service_id + UDS_PROTOCOL_POS_ACK_OFFSET;
         return service_response_len + 1;
     }
     else {
-        ((uint8_t*)buffers->response_data)[UDS_PROTOCOL_SERVICE_IDX] = UDS_SID_NEGATIVE_RESPONSE;
-        ((uint8_t*)buffers->response_data)[UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX] = service_id;
-        ((uint8_t*)buffers->response_data)[UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX] = uds_response.error_code;
+        buffers->response_data[UDS_PROTOCOL_SERVICE_IDX] = UDS_SID_NEGATIVE_RESPONSE;
+        buffers->response_data[UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX] = service_id;
+        buffers->response_data[UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX] = uds_response.error_code;
         return UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX + 1;
     }
 }
