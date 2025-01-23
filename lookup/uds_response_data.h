@@ -6,6 +6,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "../protocol/uds_negative_response.h"
 
 /**
  * @brief UDS response data set by commands to be sent back in the response
@@ -13,7 +14,7 @@ extern "C" {
  */
 typedef struct {
     /**
-     * @brief False to disable sending a response
+     * @brief False to disable sending a response (if service has subfunction, set this to bit 7 - suppressPosRspMsgIndicationBit)
      * 
      */
     bool send_response;
@@ -22,7 +23,7 @@ typedef struct {
      * @brief Error code response (0 = OK, > 0 = NACK/7F)
      * 
      */
-    uint8_t error_code;
+    UDS_NRC_t error_code;
 } uds_response_data_t;
 
 #ifdef __cplusplus
