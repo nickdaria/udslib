@@ -22,18 +22,28 @@ extern "C" {
 
 //  ECU Reset Types
 typedef enum {
-    UDS_PROTOCOL_ECU_RESET_HARD = 0x01,
-    UDS_PROTOCOL_ECU_RESET_KEY_OFF_ON = 0x02,
-    UDS_PROTOCOL_ECU_RESET_SOFT = 0x03,
-    UDS_PROTOCOL_ECU_RESET_ENABLE_RAPID_POWER_SHUTDOWN = 0x04,
-    UDS_PROTOCOL_ECU_RESET_DISABLE_RAPID_POWER_SHUTDOWN = 0x05,
+	UDS_ER_LEV_RT_ECU_RESET_HR             	= 0x01,		//  Hard Reset
+	UDS_ER_LEV_RT_ECU_RESET_KOFFONR      	= 0x02,		//  Key Off On Reset
+	UDS_ER_LEV_RT_ECU_RESET_SR            	= 0x03,		//  Soft Reset
+	UDS_ER_LEV_RT_ECU_RESET_ERPSD 			= 0x04,		//	Enable rapid power shutdown
+	UDS_ER_LEV_RT_ECU_RESET_DRPSD 			= 0x05,		//	Disable rapid power shutdown
 
-    /* 0x06-0x3F ISO SAE Reserved */
+	/* 0x06-0x3F (ISOSAERESRVD) ISO SAE Reserved */
 
-    /* 0x40-0x5F Vehicle Manufacturer Specific */
+	/* 0x40-0x5F (VMS) Vehicle Manufacturer Specific */
 
-    /* 0x70-0x7E System Supplier Specific */
-} uds_protocol_ecuReset_t;
+	/* 0x70-0x7E (SSS) System Supplier Specific */
+
+	UDS_ER_LEV_RT_MAX						= 0x7F		//	Maximum value
+} UDS_11_ER_LEV_RT_t;
+
+typedef struct {
+	//  (LEV_RT_) Reset Type
+    UDS_11_ER_LEV_RT_t resetType;
+
+    //  (PDT) Power Down Time
+    size_t powerDownTime;
+} UDS_11_ER_query_t;
 
 #ifdef __cplusplus
 }

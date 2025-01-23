@@ -16,19 +16,19 @@ size_t value_read(const void* session,
 {
     //  Read pointer not set
     if(value_entry->data_read_ptr == NULL) {
-        uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED;
+        uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
 
     //  Read security level is 0 (disabled)
     if(value_entry->data_read_ptr == 0) {
-        uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED;
+        uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
 
     //  Security level not met
     if(security_level < value_entry->base.security_level) {
-        uds_response->error_code = UDS_NACK_SECURITY_ACCESS_DENIED;
+        uds_response->error_code = UDS_NRC_SECURITY_ACCESS_DENIED;
         return 0;
     }
 
@@ -36,7 +36,7 @@ size_t value_read(const void* session,
     memcpy(response_data, value_entry->data_read_ptr, value_entry->data_len);
 
     //  Positive ack
-    uds_response->error_code = UDS_NACK_OK;
+    uds_response->error_code = UDS_NRC_PR;
 
     //  Done
     return value_entry->data_len;
@@ -61,7 +61,7 @@ size_t uds_lookup_value_read(const void* session,
         }
     }
 
-    uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED;
+    uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
     return 0;
 }
 
@@ -77,25 +77,25 @@ size_t value_write(const void* session,
 {
     //  Write pointer not set
     if(value_entry->data_write_ptr == NULL) {
-        uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED;
+        uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
 
     //  Write security level is 0 (disabled)
     if(value_entry->data_write_security_level == 0) {
-        uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED;
+        uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
 
     //  Security level not met
     if(security_level < value_entry->data_write_security_level) {
-        uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION;
+        uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION;
         return 0;
     }
 
     //  Length mismatch
     if(data_len != value_entry->data_len) {
-        uds_response->error_code = UDS_NACK_INVALID_FORMAT;
+        uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
@@ -103,7 +103,7 @@ size_t value_write(const void* session,
     memcpy(value_entry->data_write_ptr, data, data_len);
 
     //  Done
-    uds_response->error_code = UDS_NACK_OK;
+    uds_response->error_code = UDS_NRC_PR;
 
     return 0;
 }
@@ -130,7 +130,7 @@ size_t uds_lookup_value_write(const void* session,
     }
 
     //  Not found
-    uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED;
+    uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
     return 0;
 }
 

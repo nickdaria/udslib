@@ -15,7 +15,7 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
     //  Build response
     uds_response_data_t uds_response = {
         .send_response = true,
-        .error_code = UDS_NACK_SERVICE_NOT_SUPPORTED
+        .error_code = UDS_NRC_SERVICE_NOT_SUPPORTED
     };
 
     uint8_t service_id = request_buf[UDS_PROTOCOL_SERVICE_IDX];
@@ -42,11 +42,11 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
     //  Override NACK code
     if(!service_found) {
         //  Service not found
-        uds_response.error_code = UDS_NACK_SERVICE_NOT_SUPPORTED;
+        uds_response.error_code = UDS_NRC_SERVICE_NOT_SUPPORTED;
     }
 
     //  Build response
-    if(uds_response.error_code == UDS_NACK_OK) {
+    if(uds_response.error_code == UDS_NRC_PR) {
         response_buf[UDS_PROTOCOL_SERVICE_IDX] = service_id + UDS_PROTOCOL_POS_ACK_OFFSET;
         return service_response_len + 1;
     }

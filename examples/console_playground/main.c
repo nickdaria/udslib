@@ -166,7 +166,7 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
 
     //  Length check
     if(data_len < 1) {
-        uds_response->error_code = UDS_NACK_INVALID_FORMAT;
+        uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
@@ -174,7 +174,7 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
     session->security_level = data[0];
 
     //  Return positive response
-    uds_response->error_code = UDS_NACK_OK;
+    uds_response->error_code = UDS_NRC_PR;
     response_data[0] = data[0];
     return 1;
 }
@@ -185,7 +185,7 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
 
     //  Length check
     if(data_len != 2) {
-        uds_response->error_code = UDS_NACK_INVALID_FORMAT;
+        uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
@@ -209,7 +209,7 @@ size_t service_write_by_local_id(const uds_function_context_t* context, uds_resp
 
     //  Length check
     if(data_len < 2) {
-        uds_response->error_code = UDS_NACK_INVALID_FORMAT;
+        uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 

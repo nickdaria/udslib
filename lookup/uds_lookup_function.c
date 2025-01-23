@@ -13,13 +13,13 @@ size_t function_run(const void* session,
 {
     //  Function pointer not set
     if(function_entry == NULL || function_entry->function == NULL) {
-        uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED;
+        uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
 
     //  Security level not met
     if(security_level < function_entry->base.security_level) {
-        uds_response->error_code = UDS_NACK_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION;
+        uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION;
         return 0;
     }
 

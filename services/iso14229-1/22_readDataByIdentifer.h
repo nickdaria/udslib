@@ -34,28 +34,28 @@ typedef struct {
 
     //  Count of elements
     size_t elements_count;
-} uds_0x22_query;
+} uds_22_rdbi_query;
 
 typedef struct {
     //  Associated request
-    uds_0x22_query query;
+    uds_22_rdbi_query query;
 
     //  Data
     void* data_identifier_value;
     size_t* data_identifier_value_len;
-} uds_0x22_response;
+} uds_22_rdbi_response;
 
 //  Encoding outgoing response
-size_t uds_0x22_encode_response(const uds_0x22_query* query, const uds_0x22_response* response, void* buf);
+size_t uds_22_rdbi_encode_response(const uds_22_rdbi_query* query, const uds_22_rdbi_response* response, void* buf);
 
 //  Decoding incoming response
-uds_protocol_negativeResponseCode_t uds_0x22_decode_response(uds_0x22_response* response, const void* buf, const size_t len);
+UDS_NRC_t uds_22_rdbi_decode_response(uds_22_rdbi_response* response, const void* buf, const size_t len);
 
 //  Encoding outgoing request
-size_t uds_0x22_encode_query(const uds_0x22_query* query, void* buf);
+size_t uds_22_rdbi_encode_query(const uds_22_rdbi_query* query, void* buf);
 
 //  Decoding incoming request
-uds_protocol_negativeResponseCode_t uds_0x22_decode_query(uds_0x22_query* query, const void* buf, const size_t len);
+UDS_NRC_t uds_22_rdbi_decode_query(uds_22_rdbi_query* query, const void* buf, const size_t len);
 
 #ifdef __cplusplus
 }
