@@ -51,7 +51,7 @@ size_t uds_session_process_request(uds_session_t* session, const uint8_t* reques
         return service_response_len + 1;
     }
     else {
-        response_buf[UDS_PROTOCOL_SERVICE_IDX] = UDS_SERVICE_NEGATIVE_RESPONSE;
+        response_buf[UDS_PROTOCOL_SERVICE_IDX] = UDS_SID_NEGATIVE_RESPONSE;
         response_buf[UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX] = service_id;
         response_buf[UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX] = uds_response.error_code;
         return UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX + 1;

@@ -4,117 +4,180 @@
 extern "C" {
 #endif
 
-/**
- * @brief Data Identifiers for 0x22 Read Data By Identifier
- *  https://piembsystech.com/data-identifiers-did-of-uds-protocol-iso-14229/
- * 
- */
 typedef enum {
-    /* 0x0000 - 0x00FF: ISO SAE Reserved */
+  /* 0x0000 – 0x00FF (ISOSAEReserved) */
 
-    /* 0x0100 - 0xA5FF: Vehicle Manufacturer Specific */
+  /* 0x0100 – 0xA5FF (VMS) Vehicle Manufacturer Specific */
 
-    /* 0xA600 - 0xA7FF: Reserved for Legislative Use */
+  /* 0xA600 – 0xA7FF (RFLU) Reserved For Legislative Use */
 
-    /* 0xA800 - 0xACFF: Vehicle Manufacturer Specific */
+  /* 0xA800 – 0xACFF (VMS) Vehicle Manufacturer Specific */
 
-    /* 0xAD00 - 0xAFFF: Reserved for Legislative Use */
+  /* 0xAD00 – 0xAFFF (RFLU) Reserved For Legislative Use */
 
-    /* 0xB000 - 0xB1FF: Vehicle Manufacturer Specific */
+  /* 0xB000 – 0xB1FF (VMS) Vehicle Manufacturer Specific */
 
-    /* 0xB200 - 0xBFFF: Reserved for Legislative Use */
+  /* 0xB200 – 0xBFFF (RFLU) Reserved For Legislative Use */
 
-    /* 0xC000 - 0xC2FF: Vehicle Manufacturer Specific */
+  /* 0xC000 – 0xC2FF (VMS) Vehicle Manufacturer Specific */
 
-    /* 0xC300 - 0xCEFF: Reserved for Legislative Use */
+  /* 0xC300 – 0xCEFF (RFLU) Reserved For Legislative Use */
+  
+  /* 0xCF00 – 0xEFFF (VMS) Vehicle Manufacturer Specific */
 
-    /* 0xCF00 - 0xEFFF: Vehicle Manufacturer Specific */
+  /* 0xF000 – 0xF00F (NCDFTTADID) Network Configuration Data For Tractor Trailer Application Data-Identifier */
+  UDS_DID_NCDFTTADID = 0xF000,
+  UDS_DID_NCDFTTADID_END = 0xF00F,
+  
+  /* 0xF010 – 0xF0FF (VMS) Vehicle Manufacturer Specific */
+  
+  /* 0xF100 – 0xF17F (IDOPTVMSDID) Identification Option Vehicle Manufacturer Specific Data Identifier */
+  UDS_DID_IDOPTVMSDID = 0xF100,
+  UDS_DID_IDOPTVMSDID_END = 0xF17F,
 
-    /* 0xF000 - 0xF00F: Network Configuration Data For Tractor Trailer Application */
+  UDS_DID_BSIDID = 0xF180,
+  UDS_DID_BOOT_SOFTWARE_IDENTIFICATION = UDS_DID_BSIDID,
 
-    /* 0xF010 - 0xF0FF: Vehicle Manufacturer Specific */
+  UDS_DID_ASIDID = 0xF181,
+  UDS_DID_APPLICATION_SOFTWARE_IDENTIFICATION = UDS_DID_ASIDID,
 
-    /* 
-      0xF100 - 0xF17F: 
-      Identification Option Vehicle Manufacturer Specific 
-    */
-    UDS_DID_BOOT_SOFTWARE_ID = 0xF180, /* Boot Software Identification Data Identifier */
-    UDS_DID_APP_SOFTWARE_ID = 0xF181, /* Application Software Identification Data Identifier */
-    UDS_DID_APP_DATA_ID = 0xF182, /* Application Data Identification Data Identifier */
-    UDS_DID_BOOT_SW_FINGERPRINT = 0xF183, /* Boot Software Finger-print Data Identifier */
-    UDS_DID_APP_SW_FINGERPRINT = 0xF184, /* Application Software Fingerprint Data Identifier */
-    UDS_DID_APP_DATA_FINGERPRINT = 0xF185, /* Application Data Fingerprint Data Identifier */
-    UDS_DID_ACTIVE_DIAG_SESSION = 0xF186, /* Active Diagnostic Session Data Identifier */
-    UDS_DID_SPARE_PART_NUMBER = 0xF187, /* Vehicle Manufacturer Spare Part Number Data Identifier */
-    UDS_DID_ECU_SW_NUMBER = 0xF188, /* Vehicle Manufacturer ECU Software Number Data Identifier */
-    UDS_DID_ECU_SW_VERSION = 0xF189, /* Vehicle Manufacturer ECU Software Version Number Data Identifier */
-    UDS_DID_SYSTEM_SUPPLIER_ID = 0xF18A, /* System Supplier Identifier Data Identifier */
-    UDS_DID_ECU_MANUFACTURING_DATE = 0xF18B, /* ECU Manufacturing Date Data Identifier */
-    UDS_DID_ECU_SERIAL_NUMBER = 0xF18C, /* ECU Serial Number Data Identifier */
-    UDS_DID_SUPPORTED_FUNCTIONAL_UNITS = 0xF18D, /* Supported Functional Units Data Identifier */
-    UDS_DID_KIT_ASSEMBLY_PART_NUMBER = 0xF18E, /* Vehicle Manufacturer Kit Assembly Part Number Data Identifier */
-    
-    /*  0xF18F:  ISO SAE Reserved Standardized  */
-      
-    UDS_DID_VIN_DATA = 0xF190, /* VIN Data Identifier */
-    UDS_DID_ECU_HW_NUMBER = 0xF191, /* Vehicle Manufacturer ECU Hardware Number Data Identifier */
-    UDS_DID_SYS_SUPPLIER_HW_NUMBER = 0xF192, /* System Supplier ECU Hardware Number Data Identifier */
-    UDS_DID_SYS_SUPPLIER_HW_VERSION = 0xF193, /* System Supplier ECU Hardware Version Number Data Identifier */
-    UDS_DID_SYS_SUPPLIER_SW_NUMBER = 0xF194, /* System Supplier ECU Software Number Data Identifier */
-    UDS_DID_SYS_SUPPLIER_SW_VERSION = 0xF195, /* System Supplier ECU Software Version Number Data Identifier */
-    UDS_DID_EXHAUST_REGULATION = 0xF196, /* Exhaust Regulation Or Type Approval Number Data Identifier */
-    UDS_DID_SYSTEM_NAME_ENGINE_TYPE = 0xF197, /* System Name Or Engine Type Data Identifier */
-    UDS_DID_REPAIR_SHOP_CODE = 0xF198, /* Repair Shop Code Or Tester Serial Number Data Identifier */
-    UDS_DID_PROGRAMMING_DATE = 0xF199, /* Programming Date Data Identifier */
-    UDS_DID_CALIB_REPAIR_SHOP_CODE = 0xF19A, /* Calibration Repair Shop Code Or Calibration Equipment Serial Number */
-    UDS_DID_CALIBRATION_DATE = 0xF19B, /* Calibration Date Data Identifier */
-    UDS_DID_CALIB_EQUIPMENT_SW_NUMBER = 0xF19C, /* Calibration Equipment Software Number Data Identifier */
-    UDS_DID_ECU_INSTALLATION_DATE = 0xF19D, /* ECU Installation Date Data Identifier */
-    UDS_DID_ODX_FILE = 0xF19E, /* ODX File Data Identifier */
-    UDS_DID_ENTITY = 0xF19F, /* Entity Data Identifier */
+  UDS_DID_ASDID = 0xF182,
+  UDS_DID_APPLICATION_DATA_IDENTIFICATION = UDS_DID_ASDID,
 
-    /* 0xF1A0 - 0xF1EF: Identification Option Vehicle Manufacturer Specific */
+  UDS_DID_BSFDID = 0xF183,
+  UDS_DID_BOOT_SOFTWARE_FINGERPRINT = UDS_DID_BSFDID,
 
-    /* 0xF1F0 - 0xF1FF: Identification Option System Supplier Specific */
+  UDS_DID_ASFDID = 0xF184,
+  UDS_DID_APPLICATION_SOFTWARE_FINGERPRINT = UDS_DID_ASFDID,
 
-    /* 0xF200 - 0xF2FF: Periodic Data Identifier */
+  UDS_DID_ADFDID = 0xF185,
+  UDS_DID_APPLICATION_DATA_FINGERPRINT = UDS_DID_ADFDID,
 
-    /* 0xF300 - 0xF3FF: Dynamically Defined Data Identifier */
+  UDS_DID_ADSDID = 0xF186,
+  UDS_DID_ACTIVE_DIAGNOSTIC_SESSION = UDS_DID_ADSDID,
 
-    /* 0xF400 - 0xF4FF: OBD Data Identifier */
+  UDS_DID_VMSPNDID = 0xF187,
+  UDS_DID_VEHICLE_MANUFACTURER_SPARE_PART_NUMBER = UDS_DID_VMSPNDID,
 
-    /* 0xF500 - 0xF5FF: OBD Data Identifier */
+  UDS_DID_VMECUSNDID = 0xF188,
+  UDS_DID_VEHICLE_MANUFACTURER_ECU_SOFTWARE_NUMBER = UDS_DID_VMECUSNDID,
 
-    /* 0xF600 - 0xF6FF: OBD Monitor Data Identifier */
+  UDS_DID_VMECUSVNID = 0xF189,
+  UDS_DID_VEHICLE_MANUFACTURER_ECU_SOFTWARE_VERSION_NUMBER = UDS_DID_VMECUSVNID,
 
-    /* 0xF700 - 0xF7FF: OBD Monitor Data Identifier */
+  UDS_DID_SSIDID = 0xF18A,
+  UDS_DID_SYSTEM_SUPPLIER_IDENTIFIER = UDS_DID_SSIDID,
 
-    /* 0xF800 - 0xF8FF: OBD Info Type Data Identifier */
+  UDS_DID_ECUMDDID = 0xF18B,
+  UDS_DID_ECU_MANUFACTURING_DATE = UDS_DID_ECUMDDID,
 
-    /* 0xF900 - 0xF9FF: Tachograph Data Identifier */
+  UDS_DID_ECUSNDID = 0xF18C,
+  UDS_DID_ECU_SERIAL_NUMBER = UDS_DID_ECUSNDID,
 
-    /* 0xFA00 - 0xFA0F: Airbag Deployment Data Identifier */
+  UDS_DID_SFUFDID = 0xF18D,
+  UDS_DID_SUPPORTED_FUNCTIONAL_UNITS = UDS_DID_SFUFDID,
 
-    /* 0xFA10 - 0xFA18: Event Data Recorder (EDR) Identifiers */
-    UDS_DID_NUMBER_OF_EDR_DEVICES = 0xFA10, /* Number Of EDR Devices */
-    UDS_DID_EDR_IDENTIFICATION = 0xFA11, /* EDR Identification */
-    UDS_DID_EDR_DEVICE_ADDRESS_INFO = 0xFA12, /* EDR Device Address Information */
+  UDS_DID_VMKAPNDID = 0xF18E,
+  UDS_DID_VEHICLE_MANUFACTURER_KIT_ASSEMBLY_PART_NUMBER = UDS_DID_VMKAPNDID,
 
-    // EDR Entry List
-    UDS_DID_EDR_ENTRY_LATEST = 0xFA13, /* Latest EDR Entry */
-    UDS_DID_EDR_ENTRY_OLDEST = 0xFA18, /* Oldest EDR Entry */
+  /* 0xF18F (ISOSAERESRVD) */
 
-    /* 0xFA19 - 0xFAFF: Safety System Data Identifier */
+  UDS_DID_VINDID = 0xF190,
+  UDS_DID_VIN = UDS_DID_VINDID,
 
-    /* 0xFB00 - 0xFCFF: Reserved For Future Legislative Requirements */
+  UDS_DID_VMECHNDID = 0xF191,
+  UDS_DID_VEHICLE_MANUFACTURER_ECU_HARDWARE_NUMBER = UDS_DID_VMECHNDID,
 
-    /* 0xFD00 - 0xFEFF: System Supplier Specific */
+  UDS_DID_SSECUHWNDID = 0xF192,
+  UDS_DID_SYSTEM_SUPPLIER_ECU_HARDWARE_NUMBER = UDS_DID_SSECUHWNDID,
 
-    /* 0xFF00: UDS Version Data Identifier */
-    UDS_DID_UDS_VERSION = 0xFF00, /* UDS Version Data Identifier */
+  UDS_DID_SSECUHWVNDID = 0xF193,
+  UDS_DID_SYSTEM_SUPPLIER_ECU_HARDWARE_VERSION_NUMBER = UDS_DID_SSECUHWVNDID,
 
-    /* 0xFF01 - 0xFFFF: ISO SAE Reserved */
-} uds_protocol_dataIdentifier_t;
+  UDS_DID_SSECUSWNDID = 0xF194,
+  UDS_DID_SYSTEM_SUPPLIER_ECU_SOFTWARE_NUMBER = UDS_DID_SSECUSWNDID,
+
+  UDS_DID_SSECUSWVNDID = 0xF195,
+  UDS_DID_SYSTEM_SUPPLIER_ECU_SOFTWARE_VERSION_NUMBER = UDS_DID_SSECUSWVNDID,
+
+  UDS_DID_EROTANDID = 0xF196,
+  UDS_DID_EXHAUST_REGULATION_OR_TYPE_APPROVAL_NUMBER = UDS_DID_EROTANDID,
+
+  UDS_DID_SNOETDID = 0xF197,
+  UDS_DID_SYSTEM_NAME_OR_ENGINE_TYPE = UDS_DID_SNOETDID,
+
+  UDS_DID_RSCOTSNDID = 0xF198,
+  UDS_DID_REPAIR_SHOP_CODE_OR_TESTER_SERIAL_NUMBER = UDS_DID_RSCOTSNDID,
+
+  UDS_DID_PDDID = 0xF199,
+  UDS_DID_PROGRAMMING_DATE = UDS_DID_PDDID,
+
+  UDS_DID_CRSCOCESNDID = 0xF19A,
+  UDS_DID_CALIBRATION_REPAIR_SHOP_CODE_OR_CALIBRATION_EQUIPMENT_SERIAL_NUMBER = UDS_DID_CRSCOCESNDID,
+
+  UDS_DID_CDDID = 0xF19B,
+  UDS_DID_CALIBRATION_DATE = UDS_DID_CDDID,
+
+  UDS_DID_CESWNDID = 0xF19C,
+  UDS_DID_CALIBRATION_EQUIPMENT_SOFTWARE_NUMBER = UDS_DID_CESWNDID,
+
+  UDS_DID_EIDDID = 0xF19D,
+  UDS_DID_ECU_INSTALLATION_DATE = UDS_DID_EIDDID,
+
+  UDS_DID_ODXFDID = 0xF19E,
+  UDS_DID_ODX_FILE = UDS_DID_ODXFDID,
+
+  UDS_DID_EDID = 0xF19F,
+  UDS_DID_ENTITY = UDS_DID_EDID,
+
+  /* 0xF1A0 – 0xF1EF (IDOPTVMS) Identification Option Vehicle Manufacturer Specific */
+
+  /* 0xF1F0 – 0xF1FF (IDOPTSSS) Identification Option System Supplier Specific */
+
+  /* 0xF200 – 0xF2FF (PDID) Periodic Data Identifier */
+
+  /* 0xF300 – 0xF3FF (DDDDI) Dynamically Defined Data Identifier */
+
+  /* 0xF400 – 0xF4FF (OBDDID) OBD Data Identifier */
+
+  /* 0xF500 – 0xF5FF (OBDDID) OBD Data Identifier */
+
+  /* 0xF600 – 0xF6FF (OBDMDID) OBD Monitor Data Identifier */
+
+  /* 0xF700 – 0xF7FF (OBDMDID) OBD Monitor Data Identifier */
+
+  /* 0xF800 – 0xF8FF (OBDINFTYPDID) OBD Info Type Data Identifier */
+
+  /* 0xF900 – 0xF9FF (TACHODID) Tachograph Data Identifier */
+
+  /* 0xFA00 – 0xFA0F (ADDID) Airbag Deployment Data Identifier */
+
+  UDS_DID_NOEDRD = 0xFA10,
+  UDS_DID_NUMBER_OF_EDR_DEVICES = UDS_DID_NOEDRD,
+
+  UDS_DID_EDRI = 0xFA11,
+  UDS_DID_EDR_IDENTIFICATION = UDS_DID_EDRI,
+
+  UDS_DID_EDRDAI = 0xFA12,
+  UDS_DID_EDR_DEVICE_ADDRESS_INFORMATION = UDS_DID_EDRDAI,
+
+  UDS_DID_EDRES = 0xFA13,
+  UDS_DID_EDR_ENTRY_LATEST = UDS_DID_EDRES,
+
+  UDS_DID_EDRES_END = 0xFA18,
+  UDS_DID_EDR_ENTRY_OLDEST = UDS_DID_EDRES_END,
+
+  /* 0xFA19 – 0xFAFF (SSDID) Safety System Data Identifier */
+
+  /* 0xFB00 – 0xFCFF (RFLU) Reserved For Legislative Use */
+
+  /* 0xFD00 – 0xFEFF (SSS) System Supplier Specific */
+
+  UDS_DID_UDS_VERSION = 0xFF00,
+  UDS_DID_UDS_VERSION_DATA_IDENTIFIER = UDS_DID_UDS_VERSION,
+
+  /* 0xFF01 – 0xFFFF (ISOSAEReserved) */
+} UDS_DID_t;
 
 #ifdef __cplusplus
 }

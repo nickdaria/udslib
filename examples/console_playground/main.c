@@ -67,7 +67,7 @@ uds_lookup_value_t values[] = {
 uds_lookup_function_t services[] = {
     {
         .base = {
-            .id = UDS_SERVICE_DIAGNOSTIC_SESSION_CONTROL,
+            .id = UDS_SID_DIAGNOSTIC_SESSION_CONTROL,
             .name = "Diagnostic Session Control",
             .security_level = 1
         },
@@ -75,7 +75,7 @@ uds_lookup_function_t services[] = {
     },
     {
         .base = {
-            .id = UDS_SERVICE_READ_DATA_BY_IDENTIFIER,
+            .id = UDS_SID_RDBI, //  same as UDS_SID_READ_DATA_BY_IDENTIFIER
             .name = "Read Data By Identifier",
             .security_level = 1
         },
@@ -83,7 +83,7 @@ uds_lookup_function_t services[] = {
     },
     {
         .base = {
-            .id = UDS_SERVICE_WRITE_DATA_BY_IDENTIFIER,
+            .id = UDS_SID_WDBI, //  same as UDS_SID_WRITE_DATA_BY_IDENTIFIER
             .name = "Write Data By Identifier",
             .security_level = 0x30
         },
