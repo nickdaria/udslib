@@ -5,9 +5,9 @@
 
 #include <udslib.h>
 
-size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max);
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max);
-size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max);
+size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers);
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers);
+size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers);
 
 
 uds_session_t session;
@@ -101,7 +101,15 @@ void cmd_help() {
 
 void cmd_hexdata(const uint8_t* buf, const size_t len) {
     uint8_t response_buf[256];
-    size_t response_len = uds_session_process_request(&session, buf, len, response_buf, sizeof(response_buf));
+
+    uds_buffers_t uds_bufs = {
+        .request_data = buf,
+        .request_len = len,
+        .response_data = response_buf,
+        .response_buf_len = sizeof(response_buf)
+    };
+
+    size_t response_len = uds_session_process_request(&session, &uds_bufs);
 
     printf("Response: ");
     for (size_t i = 0; i < response_len; i++) {
@@ -157,7 +165,7 @@ void usr_process_cmd(const uint8_t* buffer, const size_t length) {
     cmd_hexdata(hex_buffer, hex_len);
 }
 
-size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max) {
+size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers) {
     printf("Diagnostic session control");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
@@ -165,66 +173,66 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
     uds_session_t* session = (uds_session_t*)context->uds_session;
 
     //  Length check
-    if(data_len < 1) {
+    if(buffers->request_len < 1) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
     //  Enter requested level
-    session->security_level = data[0];
+    session->security_level = ((uint8_t*)buffers->request_data)[0];
 
     //  Return positive response
     uds_response->error_code = UDS_NRC_PR;
-    response_data[0] = data[0];
+    ((uint8_t*)buffers->response_data)[0] = ((uint8_t*)buffers->request_data)[0];
     return 1;
 }
 
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max) {
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers) {
     printf("Read by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
     //  Length check
-    if(data_len != 2) {
+    if(buffers->request_len != 2) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
     //  Get local ID
-    uint16_t local_id = (data[0] << 8) | data[1];
+    uint16_t local_id = (((uint8_t*)buffers->request_data)[0] << 8) | ((uint8_t*)buffers->request_data)[1];
 
     //  Prepare response buffer
-    response_data[0] = local_id >> 8;
-    response_data[1] = local_id & 0xFF;
-    uint8_t* shifted_response_data = response_data + 2;
-    size_t shifted_response_len_max = response_len_max - 2;
+    ((uint8_t*)buffers->response_data)[0] = local_id >> 8;
+    ((uint8_t*)buffers->response_data)[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = ((uint8_t*)buffers->response_data) + 2;
+    size_t shifted_response_len_max = buffers->response_buf_len - 2;
 
     //  Find and return
     size_t return_len = uds_lookup_value_read(context->uds_session, uds_response, local_id, context->security_level, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);
     return return_len + 2;
 }
 
-size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, const uint8_t* data, const size_t data_len, uint8_t* response_data, const size_t response_len_max) {
+size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers) {
     printf("Write by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
     //  Length check
-    if(data_len < 2) {
+    if(buffers->request_len < 2) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
     //  Get local ID
-    uint16_t local_id = (data[0] << 8) | data[1];
+    uint16_t local_id = (((uint8_t*)buffers->request_data)[0] << 8) | ((uint8_t*)buffers->request_data)[1];
 
     //  Shifted input buffer to pass in
-    const uint8_t* shifted_data = data + 2;
-    size_t shifted_data_len = data_len - 2;
+    const uint8_t* shifted_data = ((uint8_t*)buffers->request_data) + 2;
+    size_t shifted_data_len = buffers->request_len - 2;
 
     //  Prepare response buffer
-    response_data[0] = local_id >> 8;
-    response_data[1] = local_id & 0xFF;
-    uint8_t* shifted_response_data = response_data + 2;
-    size_t shifted_response_len_max = response_len_max - 2;
+    ((uint8_t*)buffers->response_data)[0] = local_id >> 8;
+    ((uint8_t*)buffers->response_data)[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = ((uint8_t*)buffers->response_data) + 2;
+    size_t shifted_response_len_max = buffers->response_buf_len - 2;
 
     //  Find and write
     size_t ret_len = uds_lookup_value_write(context->uds_session, uds_response, local_id, context->security_level, shifted_data, shifted_data_len, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);

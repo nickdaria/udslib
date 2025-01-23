@@ -45,6 +45,18 @@ typedef struct {
     size_t powerDownTime;
 } UDS_11_ER_query_t;
 
+//  Encoding outgoing response
+size_t UDS_11_ER_response_encode(const UDS_11_ER_query_t* query, const UDS_NRC_t response, void* buf, const size_t buf_len);
+
+//  Decoding incoming response
+UDS_NRC_t UDS_11_ER_response_decode(UDS_11_ER_query_t* response, const void* buf, const size_t len);
+
+//  Encoding outgoing request
+size_t UDS_11_ER_request_encode(const UDS_11_ER_query_t* query, void* buf);
+
+//  Decoding incoming request
+UDS_NRC_t UDS_11_ER_request_decode(UDS_11_ER_query_t* query, const void* buf, const size_t len);
+
 #ifdef __cplusplus
 }
 #endif
