@@ -5,6 +5,7 @@ extern "C" {
 #endif
 
 #include "../../udslib.h"
+#include "../../protocol/uds_subfunction.h"
 
 /**
  *  ECU Reset (0x11)
@@ -29,8 +30,10 @@ typedef enum {
 } UDS_11_ER_LEV_RT_t;
 
 typedef struct {
-	//  (LEV_RT_) Reset Type
-    UDS_11_ER_LEV_RT_t resetType;
+	//  (UDS_11_ER_LEV_RT_t) Reset Type
+	//	- subfunction = reset type
+	//	- suppressPosRspMsgIndicationBit
+    UDS_SUBFUNC_LV_t resetType;
 
     //  (PDT) Power Down Time
 	//	0-254s, 0xFF = failure or time not available
@@ -38,7 +41,7 @@ typedef struct {
 } UDS_11_ER_request_t;
 
 /**
- * @brief Encode server response to client
+ * @brief (Server) Encode positive response data to respond to clients request
  * 
  * @param query Struct containing request data
  * @param buf Buffer to place response into
@@ -48,22 +51,24 @@ typedef struct {
 size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query, uint8_t* buf, const size_t buf_len);
 
 /**
- * @brief Decode client request to server
+ * @brief (Server) Decode request from client
  * 
  * @param query Query to place decoded data into
- * @param suppressPosRspMsgIndicationBit (optional) Suppress positive response message indication bit from client or NULL
  * @param buf Buffer containing request data
  * @param buf_len Length of request
  * @return UDS_NRC_t UDS_NRC_PR or error if request is invalid
  */
-UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, bool* suppressPosRspMsgIndicationBit, const uint8_t* buf, const size_t buf_len);
+UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, const uint8_t* buf, const size_t buf_len);
 
-//  Encoding outgoing request
+/**
+ * @brief (Client) Encode request to send to server
+ * 
+ * @param query 
+ * @param buf 
+ * @param buf_len 
+ * @return size_t 
+ */
 size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uint8_t* buf, const size_t buf_len);
-
-//  Decoding incoming response
-UDS_NRC_t UDS_11_ER_client_decodeResponse(UDS_11_ER_request_t* response, const uint8_t* buf, const size_t buf_len);
-
 
 #ifdef __cplusplus
 }
