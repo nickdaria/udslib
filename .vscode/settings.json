@@ -8,6 +8,7 @@
         "uds_lookup_value.h": "c",
         "stddef.h": "c",
         "uds_negative_response.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "uds_subfunction.h": "c"
     }
 }

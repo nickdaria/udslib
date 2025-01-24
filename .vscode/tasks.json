@@ -12,7 +12,7 @@
                 "-o",
                 "examples/console_playground/console_playground",
                 "examples/console_playground/main.c",
-                "${workspaceFolder}/session/uds_session.c",
+                "${workspaceFolder}/session_server/uds_server.c",
                 "${workspaceFolder}/lookup/uds_lookup_value.c",
                 "${workspaceFolder}/lookup/uds_lookup_function.c",
                 "-I",

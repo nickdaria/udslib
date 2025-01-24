@@ -13,7 +13,7 @@ extern "C" {
         - uds_services.h - structs, decoding, and encoding for ISO 14299-1 services
 */
 
-#include "session/uds_session.h"
+#include "session_server/uds_server.h"
 #include "protocol/uds_protocol.h"
 #include "services/uds_services.h"
 #include "lookup/uds_lookup_value.h"

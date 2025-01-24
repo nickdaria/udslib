@@ -1,8 +1,8 @@
-#include "uds_session.h"
+#include "uds_server.h"
 #include "../protocol/uds_negative_response.h"
 #include "../protocol/uds_services.h"
 
-void uds_session_init(uds_session_t* session, uds_lookup_function_t* services_table, size_t services_table_len) {
+void uds_server_init(uds_session_t* session, uds_lookup_function_t* services_table, size_t services_table_len) {
     session->security_level = UDS_PROTOCOL_DEFAULT_SESSION;
     session->services_table = services_table;
     session->services_table_len = services_table_len;
@@ -11,7 +11,7 @@ void uds_session_init(uds_session_t* session, uds_lookup_function_t* services_ta
 /*
     Under the hood, service lookup is just the same as a function lookup, but has special handling for the service ID byte and NACK responses
 */
-size_t uds_session_process_request(uds_session_t* session, uds_buffers_t* buffers) {
+size_t uds_server_process_request(uds_session_t* session, uds_buffers_t* buffers) {
     //  Build response
     uds_response_data_t uds_response = {
         .send_response = true,

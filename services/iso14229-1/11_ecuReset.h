@@ -9,15 +9,6 @@ extern "C" {
 /**
  *  ECU Reset (0x11)
  *      https://piembsystech.com/ecu-reset-service-identifier-0x11-uds-protocol/
- * 
- *      [Accepts]
- *     - Reset type
- * 
- *      [Response]
- *      - B0: Subfunction (Reset Type)
- *      - Execute Reset
- * 
- *      [NACK Response]
  */
 
 //  ECU Reset Types
@@ -42,20 +33,37 @@ typedef struct {
     UDS_11_ER_LEV_RT_t resetType;
 
     //  (PDT) Power Down Time
+	//	0-254s, 0xFF = failure or time not available
     size_t powerDownTime;
-} UDS_11_ER_query_t;
+} UDS_11_ER_request_t;
 
-//  Encoding outgoing response
-size_t UDS_11_ER_response_encode(const UDS_11_ER_query_t* query, const UDS_NRC_t response, uint8_t* buf, const size_t buf_len);
+/**
+ * @brief Encode server response to client
+ * 
+ * @param query Struct containing request data
+ * @param buf Buffer to place response into
+ * @param buf_len Length of response buffer
+ * @return size_t Length of response data
+ */
+size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query, uint8_t* buf, const size_t buf_len);
 
-//  Decoding incoming response
-UDS_NRC_t UDS_11_ER_response_decode(UDS_11_ER_query_t* response, const uint8_t* buf, const size_t buf_len);
+/**
+ * @brief Decode client request to server
+ * 
+ * @param query Query to place decoded data into
+ * @param suppressPosRspMsgIndicationBit (optional) Suppress positive response message indication bit from client or NULL
+ * @param buf Buffer containing request data
+ * @param buf_len Length of request
+ * @return UDS_NRC_t UDS_NRC_PR or error if request is invalid
+ */
+UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, bool* suppressPosRspMsgIndicationBit, const uint8_t* buf, const size_t buf_len);
 
 //  Encoding outgoing request
-size_t UDS_11_ER_request_encode(const UDS_11_ER_query_t* query, uint8_t* buf, const size_t buf_len);
+size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uint8_t* buf, const size_t buf_len);
 
-//  Decoding incoming request
-UDS_NRC_t UDS_11_ER_request_decode(UDS_11_ER_query_t* query, const uint8_t* buf, const size_t buf_len);
+//  Decoding incoming response
+UDS_NRC_t UDS_11_ER_client_decodeResponse(UDS_11_ER_request_t* response, const uint8_t* buf, const size_t buf_len);
+
 
 #ifdef __cplusplus
 }

@@ -37,12 +37,12 @@ typedef struct {
  * @param services_table 
  * @param services_table_len 
  */
-void uds_session_init(uds_session_t* session, uds_lookup_function_t* services_table, size_t services_table_len);
+void uds_server_init(uds_session_t* session, uds_lookup_function_t* services_table, size_t services_table_len);
 
 /**
  * @brief Recieves a full request buffer, processes it, and returns a response buffer
  */
-size_t uds_session_process_request(uds_session_t* session, uds_buffers_t* buffers);
+size_t uds_server_process_request(uds_session_t* session, uds_buffers_t* buffers);
 
 #ifdef __cplusplus
 }

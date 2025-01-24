@@ -109,7 +109,7 @@ void cmd_hexdata(const uint8_t* buf, const size_t len) {
         .response_buf_len = sizeof(response_buf)
     };
 
-    size_t response_len = uds_session_process_request(&session, &uds_bufs);
+    size_t response_len = uds_server_process_request(&session, &uds_bufs);
 
     printf("Response: ");
     for (size_t i = 0; i < response_len; i++) {
@@ -250,7 +250,7 @@ void playground() {
 }
 
 void main() {
-    uds_session_init(&session, services, sizeof(services) / sizeof(uds_lookup_function_t));
+    uds_server_init(&session, services, sizeof(services) / sizeof(uds_lookup_function_t));
 
     cmd_help();
     while (1) {
