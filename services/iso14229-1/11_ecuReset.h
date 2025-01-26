@@ -48,7 +48,7 @@ typedef struct {
  * @param buf_len Length of response buffer
  * @return size_t Length of response data
  */
-size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query, uint8_t* buf, const size_t buf_len);
+size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf);
 
 /**
  * @brief (Server) Decode request from client
@@ -58,7 +58,7 @@ size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query,
  * @param buf_len Length of request
  * @return UDS_NRC_t UDS_NRC_PR or error if request is invalid
  */
-UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, const uint8_t* buf, const size_t buf_len);
+UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, uds_buf_t* buf);
 
 /**
  * @brief (Client) Encode request to send to server
@@ -68,7 +68,7 @@ UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, const uint8
  * @param buf_len 
  * @return size_t 
  */
-size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uint8_t* buf, const size_t buf_len);
+size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf);
 
 #ifdef __cplusplus
 }

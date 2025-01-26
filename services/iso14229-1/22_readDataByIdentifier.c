@@ -1,8 +1,8 @@
 #include "22_readDataByIdentifer.h"
 
-size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query, const UDS_22_RDBI_response* response, uint8_t* buf, const size_t len) {
+size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query, const UDS_22_RDBI_response* response, uds_buf_t buf) {
     //  Safety
-    if(query == NULL || query->data_identifier == NULL || response == NULL || response->data_identifier_value == NULL || response->data_identifier_value == NULL || buf == NULL) {
+    if(query == NULL || query->data_identifier == NULL || response == NULL || response->data_identifier_value == NULL || response->data_identifier_value == NULL || buf.data == NULL) {
         return 0;
     }
 
@@ -14,7 +14,7 @@ size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query,
     }
 
     //  Sufficient buffer length check
-    if (did_size + did_value_size > len) {
+    if (did_size + did_value_size > buf.len) {
         return 0;
     }
 
@@ -22,14 +22,14 @@ size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query,
 
     for(size_t i = 0; i < query->elements_count; i++) {
         //  MSB
-        buf[offset++] = (query->data_identifier[i] >> 8) & 0xFF;
+        buf.data[offset++] = (query->data_identifier[i] >> 8) & 0xFF;
 
         //  LSB
-        buf[offset++] = query->data_identifier[i] & 0xFF;
+        buf.data[offset++] = query->data_identifier[i] & 0xFF;
 
         //  Copy data
         for(size_t j = 0; j < response->data_identifier_value[i].len; j++) {
-            buf[offset++] = ((uint8_t*)response->data_identifier_value[i].data)[j];
+            buf.data[offset++] = ((uint8_t*)response->data_identifier_value[i].data)[j];
         }
     }
 
@@ -37,65 +37,65 @@ size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query,
 }
 
 size_t UDS_22_RDBI_client_decodePositiveResponse() {
-    
+
 }
 
-size_t UDS_22_RDBI_client_getNextDID(const uint8_t* buf, const size_t len, uint16_t* ret_DID) {
+size_t UDS_22_RDBI_client_getNextDID(const uds_buf_t* buf, uint16_t* ret_DID) {
     //  Safety
     if(buf == NULL || ret_DID == NULL) {
         return 0;
     }
 
     //  Minimum length check
-    if (len < 2) {
+    if (buf->len < 2) {
         return 0;
     }
 
     //  Return result
-    *ret_DID = (uint16_t)( (buf[0] << 8) | buf[1] );
+    *ret_DID = (uint16_t)( (buf->data[0] << 8) | buf->data[1] );
 
     //  Have caller offset by 2
     return 2;
 }
 
-size_t UDS_22_RDBI_client_getNextValue(const uint8_t* buf, const size_t len, const size_t DID_size, uint8_t* ret_value_ptr) {
+size_t UDS_22_RDBI_client_getNextValue(const uds_buf_t* buf, const size_t DID_size, uint8_t* ret_value_ptr) {
     //  Safety
     if(buf == NULL || ret_value_ptr == NULL) {
         return 0;
     }
 
     //  Minimum length check
-    if (len < DID_size) {
+    if (buf->len < DID_size) {
         return 0;
     }
 
     //  Copy data
     for(size_t i = 0; i < DID_size; i++) {
-        ret_value_ptr[i] = buf[i];
+        ret_value_ptr[i] = buf->data[i];
     }
 
     //  Return result
     return DID_size;
 }
 
-UDS_NRC_t UDS_22_RDBI_server_decodeRequest(UDS_22_RDBI_query* query, const size_t query_buf_size, const uint8_t* buf, const size_t len) {
+UDS_NRC_t UDS_22_RDBI_server_decodeRequest(UDS_22_RDBI_query* query, const size_t query_buf_size, uds_buf_t buf) {
     //  Safety
-    if(query == NULL || query->data_identifier == NULL || buf == NULL) {
+    if(query == NULL || query->data_identifier == NULL || buf.data == NULL) {
         return UDS_NRC_IMLOIF;
     }
     
     //  Minimum length check
-    if (len < 2) {
+    if (buf.len < 2) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Modulo 2 Division Check
-    if (len % 2 != 0) {
+    if (buf.len % 2 != 0) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Too long check
-    size_t element_count = len / 2;
+    size_t element_count = buf.len / 2;
     if (element_count > query_buf_size) {
         return UDS_NRC_RESPONSE_TOO_LONG;
     }
@@ -103,13 +103,13 @@ UDS_NRC_t UDS_22_RDBI_server_decodeRequest(UDS_22_RDBI_query* query, const size_
     //  Populate query structure
     query->elements_count = element_count;
     for(size_t i = 0; i < element_count; i++) {
-        query->data_identifier[i] = (uint16_t)( (buf[i * 2] << 8) | buf[(i * 2) + 1] );
+        query->data_identifier[i] = (uint16_t)( (buf.data[i * 2] << 8) | buf.data[(i * 2) + 1] );
     }
 
     return UDS_NRC_PR;
 }
 
-size_t UDS_22_RDBI_client_encodeRequest(const UDS_22_RDBI_query* query, uint8_t* buf, const size_t buf_len) {
+size_t UDS_22_RDBI_client_encodeRequest(const UDS_22_RDBI_query* query, uds_buf_t buf) {
     //  DID argument check
     if(query->data_identifier == NULL) {
         return 0;
@@ -121,7 +121,7 @@ size_t UDS_22_RDBI_client_encodeRequest(const UDS_22_RDBI_query* query, uint8_t*
     }
     
     //  Sufficient buffer length check
-    if(buf_len < query->elements_count * 2 || query->elements_count > (SIZE_MAX / 2)) {
+    if(buf.len < query->elements_count * 2 || query->elements_count > (SIZE_MAX / 2)) {
         return 0;
     }
 
@@ -129,10 +129,10 @@ size_t UDS_22_RDBI_client_encodeRequest(const UDS_22_RDBI_query* query, uint8_t*
     size_t offset = 0;
     for(size_t i = 0; i < query->elements_count; i++) {
         //  MSB
-        buf[offset++] = (query->data_identifier[i] >> 8) & 0xFF;
+        buf.data[offset++] = (query->data_identifier[i] >> 8) & 0xFF;
 
         //  LSB
-        buf[offset++] = query->data_identifier[i] & 0xFF;
+        buf.data[offset++] = query->data_identifier[i] & 0xFF;
     }
 
     return offset;
