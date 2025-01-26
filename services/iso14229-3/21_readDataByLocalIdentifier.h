@@ -24,9 +24,9 @@ typedef struct {
 
 size_t UDS_21_RDBLI_server_encodePositiveResponse(const UDS_21_RDBLI_response* response, uds_buf_t* ret_buf);
 
-bool UDS_21_RDBLI_client_decodePositiveResponse(UDS_21_RDBLI_response* response, uds_buf_t* buf);
+bool UDS_21_RDBLI_client_decodePositiveResponse(UDS_21_RDBLI_response* response, uds_buf_t buf);
 
-UDS_NRC_t UDS_21_RDBLI_server_decodeRequest(UDS_21_RDBLI_query* query, uds_buf_t* buf);
+UDS_NRC_t UDS_21_RDBLI_server_decodeRequest(UDS_21_RDBLI_query* query, uds_buf_t buf);
 
 size_t UDS_21_client_encodeRequest(const UDS_21_RDBLI_query* query, uds_buf_t ret_buf);
 

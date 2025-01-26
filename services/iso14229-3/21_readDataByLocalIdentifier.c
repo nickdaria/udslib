@@ -7,7 +7,7 @@ size_t UDS_21_RDBLI_server_encodePositiveResponse(const UDS_21_RDBLI_response* r
     }
 
     //  Sufficient buffer length check
-    if (response->value->buf_len > ret_buf->buf_len) {
+    if (ret_buf->buf_len < response->value_len + 1) {
         return 0;
     }
 
@@ -24,25 +24,25 @@ size_t UDS_21_RDBLI_server_encodePositiveResponse(const UDS_21_RDBLI_response* r
     return offset;
 }
 
-bool UDS_21_RDBLI_client_decodePositiveResponse(UDS_21_RDBLI_response* response, uds_buf_t* buf) {
+bool UDS_21_RDBLI_client_decodePositiveResponse(UDS_21_RDBLI_response* response, uds_buf_t buf) {
     //  Safety
-    if(response == NULL || response->value == NULL || buf->data == NULL) {
+    if(response == NULL || response->value == NULL || buf.data == NULL) {
         return false;
     }
 
     //  Minimum length check
-    if(buf->buf_len < 1) {
+    if(buf.buf_len < 1) {
         return false;
     }
 
     size_t offset = 0;
 
     //  Copy identifier
-    response->query.local_identifier = buf->data[offset++];
+    response->query.local_identifier = buf.data[offset++];
 
     //  Copy data
-    for(size_t i = 0; i < buf->buf_len - 1; i++) {
-        response->value->data[i] = buf->data[offset++];
+    for(size_t i = 0; i < buf.buf_len - 1; i++) {
+        response->value->data[i] = buf.data[offset++];
     }
 
     //  Save value size
@@ -52,19 +52,19 @@ bool UDS_21_RDBLI_client_decodePositiveResponse(UDS_21_RDBLI_response* response,
     return true;
 }
 
-UDS_NRC_t UDS_21_RDBLI_server_decodeRequest(UDS_21_RDBLI_query* query, uds_buf_t* buf) {
+UDS_NRC_t UDS_21_RDBLI_server_decodeRequest(UDS_21_RDBLI_query* query, uds_buf_t buf) {
     //  Safety
-    if(query == NULL || buf->data == NULL) {
+    if(query == NULL || buf.data == NULL) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Minimum length check
-    if (buf->buf_len != 1) {
+    if (buf.buf_len != 1) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Copy identifier
-    query->local_identifier = buf->data[0];
+    query->local_identifier = buf.data[0];
 
     return UDS_NRC_PR;
 }

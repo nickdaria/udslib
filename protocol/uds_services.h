@@ -45,6 +45,10 @@ typedef enum {
 
     /* Data Transmission */
 
+    //! I think??
+    UDS_SID_RDBLI = 0x21,
+    UDS_SID_READ_DATA_BY_LCOAL_IDENTIFIER = UDS_SID_RDBLI,
+
     UDS_SID_RDBI = 0x22,
     UDS_SID_READ_DATA_BY_IDENTIFIER = UDS_SID_RDBI,
 

@@ -15,7 +15,7 @@ extern "C" {
 
 #include "session_server/uds_server.h"
 #include "protocol/uds_protocol.h"
-#include "services/uds_services.h"
+#include "services/uds_std_services.h"
 #include "lookup/uds_lookup_value.h"
 #include "lookup/uds_lookup_function.h"
 

@@ -6,9 +6,10 @@
 #include <udslib.h>
 
 size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
-size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
+size_t service_read_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
+size_t service_write_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
 
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
 
 uds_session_t session;
 
@@ -69,7 +70,7 @@ uds_lookup_function_t services[] = {
         .base = {
             .id = UDS_SID_DIAGNOSTIC_SESSION_CONTROL,
             .name = "Diagnostic Session Control",
-            .security_level = 1
+            .security_level = 0x01
         },
         .function = service_diagnostic_session_control
     },
@@ -77,9 +78,9 @@ uds_lookup_function_t services[] = {
         .base = {
             .id = UDS_SID_RDBI, //  same as UDS_SID_READ_DATA_BY_IDENTIFIER
             .name = "Read Data By Identifier",
-            .security_level = 1
+            .security_level = 0x01
         },
-        .function = service_read_by_local_id
+        .function = service_read_by_id
     },
     {
         .base = {
@@ -87,7 +88,15 @@ uds_lookup_function_t services[] = {
             .name = "Write Data By Identifier",
             .security_level = 0x30
         },
-        .function = service_write_by_local_id
+        .function = service_write_by_id
+    },
+    {
+        .base = {
+            .id = UDS_SID_RDBLI,
+            .name = "Read Data By Local Identifier",
+            .security_level = 0x01
+        },
+        .function = service_read_by_local_id
     }
 };
 
@@ -100,7 +109,7 @@ void cmd_help() {
 }
 
 void cmd_hexdata(const uint8_t* buf, const size_t buf_len) {
-    uint8_t response_buf[256];
+    uint8_t response_buf[456];
 
     uds_buf_t request_buf_s = { .data = (uint8_t*)buf, .buf_len = buf_len };
     uds_buf_t response_buf_s = { .data = response_buf, .buf_len = sizeof(response_buf) };
@@ -188,7 +197,7 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
     return 1;
 }
 
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
+size_t service_read_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
     printf("Read by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
@@ -212,7 +221,7 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     return return_len + 2;
 }
 
-size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
+size_t service_write_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
     printf("Write by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
@@ -238,6 +247,40 @@ size_t service_write_by_local_id(const uds_function_context_t* context, uds_resp
     //  Find and write
     size_t ret_len = uds_lookup_value_write(context->uds_session, uds_response, local_id, context->security_level, shifted_data, shifted_data_len, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);
     return ret_len + 2;
+}
+
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
+    printf("Read by local id");
+    printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
+
+    UDS_21_RDBLI_query query;
+    uds_response->error_code = UDS_21_RDBLI_server_decodeRequest(&query, buffers.request);
+
+    //  Testing - just return incrementing bytes with length of request byte
+    size_t length_of_test_data = query.local_identifier;
+    size_t length_of_test_resp = length_of_test_data + 1;
+
+    uds_buf_t response_buf = {
+        .data = (uint8_t*)malloc(length_of_test_resp),
+        .buf_len = length_of_test_resp
+    };
+    for(size_t i = 0; i <= length_of_test_data; i++) {
+        response_buf.data[i] = (uint8_t)i;
+    }
+
+    UDS_21_RDBLI_response response = {
+        .query = query,
+        .value = &response_buf,
+        .value_len = length_of_test_data
+    };
+    size_t return_len = UDS_21_RDBLI_server_encodePositiveResponse(&response, &buffers.response);
+    free(response_buf.data);
+
+    if(return_len == 0) {
+        uds_response->error_code = UDS_NRC_RESPONSE_TOO_LONG;
+    }
+
+    return return_len;
 }
 
 //  Main loop
