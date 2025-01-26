@@ -40,7 +40,7 @@ size_t uds_lookup_function(const void* session,
                             uds_buffers_t* buffers,
                             bool* ret_found)
 {
-    if(uds_response == NULL || table == NULL || buffers == NULL || buffers->request_data == NULL || buffers->response_data == NULL) {
+    if(uds_response == NULL || table == NULL || buffers == NULL || buffers == NULL || buffers->request->data == NULL || buffers->response->data == NULL) {
         return 0;
     }
     

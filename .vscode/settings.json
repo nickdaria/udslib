@@ -9,6 +9,7 @@
         "stddef.h": "c",
         "uds_negative_response.h": "c",
         "stdint.h": "c",
-        "uds_subfunction.h": "c"
+        "uds_subfunction.h": "c",
+        "22_readdatabyidentifer.h": "c"
     }
 }

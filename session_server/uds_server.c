@@ -19,14 +19,22 @@ size_t uds_server_process_request(uds_session_t* session, uds_buffers_t* buffers
     };
 
     //  Extract SID
-    uint8_t service_id = ((const uint8_t*)buffers->request_data)[UDS_PROTOCOL_SERVICE_IDX];
+    uint8_t service_id = buffers->request->data[UDS_PROTOCOL_SERVICE_IDX];
+
+    uds_buf_t rx_buf = {
+        .data = buffers->request->data + UDS_PROTOCOL_SERVICE_IDX + 1,
+        .len = buffers->request->len - UDS_PROTOCOL_SERVICE_IDX - 1
+    };
+
+    uds_buf_t tx_buf = {
+        .data = buffers->response->data + 1,
+        .len = buffers->response->len - 1
+    };
 
     //  Build child buffer struct with offset for response
     uds_buffers_t service_buffers = {
-        .request_data = buffers->request_data + UDS_PROTOCOL_SERVICE_IDX + 1,
-        .request_len = buffers->request_len - UDS_PROTOCOL_SERVICE_IDX - 1,
-        .response_data = buffers->response_data + 1,
-        .response_buf_len = buffers->response_buf_len - 1
+        .request = &rx_buf,
+        .response = &tx_buf
     };
 
     bool service_found = false;
@@ -47,13 +55,13 @@ size_t uds_server_process_request(uds_session_t* session, uds_buffers_t* buffers
 
     //  Build response
     if(uds_response.error_code == UDS_NRC_PR) {
-        buffers->response_data[UDS_PROTOCOL_SERVICE_IDX] = service_id + UDS_PROTOCOL_POS_ACK_OFFSET;
+        buffers->response->data[UDS_PROTOCOL_SERVICE_IDX] = service_id + UDS_PROTOCOL_POS_ACK_OFFSET;
         return service_response_len + 1;
     }
     else {
-        buffers->response_data[UDS_PROTOCOL_SERVICE_IDX] = UDS_SID_NEGATIVE_RESPONSE;
-        buffers->response_data[UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX] = service_id;
-        buffers->response_data[UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX] = uds_response.error_code;
+        buffers->response->data[UDS_PROTOCOL_SERVICE_IDX] = UDS_SID_NEGATIVE_RESPONSE;
+        buffers->response->data[UDS_PROTOCOL_NEGATIVE_RESPONSE_SID_IDX] = service_id;
+        buffers->response->data[UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX] = uds_response.error_code;
         return UDS_PROTOCOL_NEGATIVE_RESPONSE_CODE_IDX + 1;
     }
 }
