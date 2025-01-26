@@ -36,6 +36,10 @@ size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query,
     return offset;
 }
 
+size_t UDS_22_RDBI_client_decodePositiveResponse() {
+    
+}
+
 size_t UDS_22_RDBI_client_getNextDID(const uint8_t* buf, const size_t len, uint16_t* ret_DID) {
     //  Safety
     if(buf == NULL || ret_DID == NULL) {

@@ -6,10 +6,10 @@ size_t function_run(const void* session,
                     const uint16_t resource_id, 
                     const uint8_t security_level,
                     const uds_lookup_function_t* function_entry, 
-                    uds_buffers_t* buffers) 
+                    uds_buffers_t buffers) 
 {
     //  Function pointer not set
-    if(function_entry == NULL || function_entry->function == NULL || buffers == NULL) {
+    if(function_entry == NULL || function_entry->function == NULL) {
         uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
@@ -37,10 +37,10 @@ size_t uds_lookup_function(const void* session,
                             const uint8_t security_level, 
                             const uds_lookup_function_t* table, 
                             const size_t table_len, 
-                            uds_buffers_t* buffers,
+                            uds_buffers_t buffers,
                             bool* ret_found)
 {
-    if(uds_response == NULL || table == NULL || buffers == NULL || buffers == NULL || buffers->request->data == NULL || buffers->response->data == NULL) {
+    if(uds_response == NULL || table == NULL || buffers.request.data == NULL || buffers.response.data == NULL) {
         return 0;
     }
     

@@ -33,20 +33,6 @@ typedef struct {
     const uint8_t security_level;
 } uds_resource_t;
 
-typedef struct {
-    uint8_t* data;
-    const size_t len;
-} uds_buf_t;
-
-/**
- * @brief Common struct for setting up query and response buffers and passing them through the UDS stack
- * 
- */
-typedef struct {
-    const uds_buf_t* request;
-    uds_buf_t* response;
-} uds_buffers_t;
-
 #ifdef __cplusplus
 }
 #endif

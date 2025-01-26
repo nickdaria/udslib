@@ -59,7 +59,7 @@ typedef struct {
     UDS_22_RDBI_responseValue* data_identifier_value;
 } UDS_22_RDBI_response;
 
-size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query, const UDS_22_RDBI_response* response, uint8_t* buf, const size_t len);
+size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query, const UDS_22_RDBI_response* response, const uds_buf_t buf);
 
 UDS_NRC_t UDS_22_RDBI_server_decodeRequest(UDS_22_RDBI_query* query, const size_t query_buf_size, const uint8_t* buf, const size_t len);
 size_t UDS_22_RDBI_client_encodeRequest(const UDS_22_RDBI_query* query, uint8_t* buf, const size_t buf_len);

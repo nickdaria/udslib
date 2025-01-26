@@ -5,9 +5,9 @@
 
 #include <udslib.h>
 
-size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers);
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers);
-size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers);
+size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
+size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
 
 
 uds_session_t session;
@@ -106,11 +106,11 @@ void cmd_hexdata(const uint8_t* buf, const size_t len) {
     uds_buf_t response_buf_s = { .data = response_buf, .len = sizeof(response_buf) };
 
     uds_buffers_t uds_bufs = {
-        .request = &request_buf_s,
-        .response = &response_buf_s
+        .request = request_buf_s,
+        .response = response_buf_s
     };
 
-    size_t response_len = uds_server_process_request(&session, &uds_bufs);
+    size_t response_len = uds_server_process_request(&session, uds_bufs);
 
     printf("Response: ");
     for (size_t i = 0; i < response_len; i++) {
@@ -166,7 +166,7 @@ void usr_process_cmd(const uint8_t* buffer, const size_t length) {
     cmd_hexdata(hex_buffer, hex_len);
 }
 
-size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers) {
+size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
     printf("Diagnostic session control");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
@@ -174,66 +174,66 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
     uds_session_t* session = (uds_session_t*)context->uds_session;
 
     //  Length check
-    if(buffers->request->len < 1) {
+    if(buffers.request.len < 1) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
     //  Enter requested level
-    session->security_level = buffers->request->data[0];
+    session->security_level = buffers.request.data[0];
 
     //  Return positive response
     uds_response->error_code = UDS_NRC_PR;
-    buffers->response->data[0] = buffers->request->data[0];
+    buffers.response.data[0] = buffers.request.data[0];
     return 1;
 }
 
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers) {
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
     printf("Read by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
     //  Length check
-    if(buffers->request->len != 2) {
+    if(buffers.request.len != 2) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
     //  Get local ID
-    uint16_t local_id = (buffers->request->data[0] << 8) | buffers->request->data[1];
+    uint16_t local_id = (buffers.request.data[0] << 8) | buffers.request.data[1];
 
     //  Prepare response buffer
-    buffers->response->data[0] = local_id >> 8;
-    buffers->response->data[1] = local_id & 0xFF;
-    uint8_t* shifted_response_data = buffers->response->data + 2;
-    size_t shifted_response_len_max = buffers->response->len - 2;
+    buffers.response.data[0] = local_id >> 8;
+    buffers.response.data[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = buffers.response.data + 2;
+    size_t shifted_response_len_max = buffers.response.len - 2;
 
     //  Find and return
     size_t return_len = uds_lookup_value_read(context->uds_session, uds_response, local_id, context->security_level, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);
     return return_len + 2;
 }
 
-size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t* buffers) {
+size_t service_write_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
     printf("Write by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
     //  Length check
-    if(buffers->request->len < 2) {
+    if(buffers.request.len < 2) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
     //  Get local ID
-    uint16_t local_id = (buffers->request->data[0] << 8) | buffers->request->data[1];
+    uint16_t local_id = (buffers.request.data[0] << 8) | buffers.request.data[1];
 
     //  Shifted input buffer to pass in
-    const uint8_t* shifted_data = buffers->request->data + 2;
-    size_t shifted_data_len = buffers->request->len - 2;
+    const uint8_t* shifted_data = buffers.request.data + 2;
+    size_t shifted_data_len = buffers.request.len - 2;
 
     //  Prepare response buffer
-    buffers->response->data[0] = local_id >> 8;
-    buffers->response->data[1] = local_id & 0xFF;
-    uint8_t* shifted_response_data = buffers->response->data + 2;
-    size_t shifted_response_len_max = buffers->response->len - 2;
+    buffers.response.data[0] = local_id >> 8;
+    buffers.response.data[1] = local_id & 0xFF;
+    uint8_t* shifted_response_data = buffers.response.data + 2;
+    size_t shifted_response_len_max = buffers.response.len - 2;
 
     //  Find and write
     size_t ret_len = uds_lookup_value_write(context->uds_session, uds_response, local_id, context->security_level, shifted_data, shifted_data_len, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);
