@@ -47,22 +47,60 @@ typedef struct {
 } UDS_22_RDBI_query;
 
 typedef struct {
-    uint8_t* data;
-    size_t len;
-} UDS_22_RDBI_responseValue;
-
-typedef struct {
     //  Associated request
     UDS_22_RDBI_query query;
 
     //  Data
-    UDS_22_RDBI_responseValue* data_identifier_value;
+    uds_buf_t* data_identifier_value;
 } UDS_22_RDBI_response;
 
-size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query, const UDS_22_RDBI_response* response, uds_buf_t buf);
+/**
+ * @brief (Server) Encode a positive response to send data to a client
+ * 
+ * @param query 
+ * @param response 
+ * @param buf 
+ * @return size_t 
+ */
+size_t UDS_22_RDBI_server_encodePositiveResponse(const UDS_22_RDBI_query* query, const UDS_22_RDBI_response* response, uds_buf_t ret_buf);
 
+/**
+ * @brief (Client) Manually peek the next DID from the buffer
+ * 
+ * @param buf 
+ * @param ret_DID 
+ * @return size_t 
+ */
+size_t UDS_22_RDBI_client_getNextDID(const uds_buf_t* buf, uint16_t* ret_DID);
+
+/**
+ * @brief (Client) Copy the value from the buffer
+ * 
+ * @param buf 
+ * @param DID_size 
+ * @param ret_value 
+ * @return size_t 
+ */
+size_t UDS_22_RDBI_client_getNextValue(const uds_buf_t* buf, const size_t DID_size, uds_buf_t* ret_value);
+
+/**
+ * @brief (Server) Decode a request from a client
+ * 
+ * @param query Pointer to query struct to populate
+ * @param query_buf_size Size of array in query (maximum number of DIDs)
+ * @param buf Buffer of data to decode
+ * @return UDS_NRC_t 
+ */
 UDS_NRC_t UDS_22_RDBI_server_decodeRequest(UDS_22_RDBI_query* query, const size_t query_buf_size, uds_buf_t buf);
-size_t UDS_22_RDBI_client_encodeRequest(const UDS_22_RDBI_query* query, uds_buf_t buf);
+
+/**
+ * @brief (Client) Encode a request to send to server
+ * 
+ * @param query Query to send
+ * @param buf Buffer to place request into
+ * @return size_t 
+ */
+size_t UDS_22_RDBI_client_encodeRequest(const UDS_22_RDBI_query* query, uds_buf_t ret_buf);
 
 #ifdef __cplusplus
 }

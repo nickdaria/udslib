@@ -4,26 +4,14 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "gcc",
-            "args": [
-                "-g",
-                "-Ilookup",
-                "-Isession",
-                "-o",
-                "examples/console_playground/console_playground",
-                "examples/console_playground/main.c",
-                "${workspaceFolder}/session_server/uds_server.c",
-                "${workspaceFolder}/lookup/uds_lookup_value.c",
-                "${workspaceFolder}/lookup/uds_lookup_function.c",
-                "-I",
-                "${workspaceFolder}",
-            ],
+            "command": "make",
+            "args": ["-f", "Makefile"],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "problemMatcher": ["$gcc"],
-            "detail": "Generated task for building the project"
+            "detail": "Using Makefile to compile all C files"
         }
     ]
 }

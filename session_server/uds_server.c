@@ -23,12 +23,12 @@ size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers)
 
     uds_buf_t rx_buf = {
         .data = buffers.request.data + UDS_PROTOCOL_SERVICE_IDX + 1,
-        .len = buffers.request.len - UDS_PROTOCOL_SERVICE_IDX - 1
+        .buf_len = buffers.request.buf_len - UDS_PROTOCOL_SERVICE_IDX - 1
     };
 
     uds_buf_t tx_buf = {
         .data = buffers.response.data + 1,
-        .len = buffers.response.len - 1
+        .buf_len = buffers.response.buf_len - 1
     };
 
     //  Build child buffer struct with offset for response

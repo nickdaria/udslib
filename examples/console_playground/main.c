@@ -99,11 +99,11 @@ void cmd_help() {
     printf("\t> XXXXXX Enter hex formatted data (no spaces) at the prompt to emulate UDS RX frames (without ISO-TP protocol)\n");
 }
 
-void cmd_hexdata(const uint8_t* buf, const size_t len) {
+void cmd_hexdata(const uint8_t* buf, const size_t buf_len) {
     uint8_t response_buf[256];
 
-    uds_buf_t request_buf_s = { .data = (uint8_t*)buf, .len = len };
-    uds_buf_t response_buf_s = { .data = response_buf, .len = sizeof(response_buf) };
+    uds_buf_t request_buf_s = { .data = (uint8_t*)buf, .buf_len = buf_len };
+    uds_buf_t response_buf_s = { .data = response_buf, .buf_len = sizeof(response_buf) };
 
     uds_buffers_t uds_bufs = {
         .request = request_buf_s,
@@ -174,7 +174,7 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
     uds_session_t* session = (uds_session_t*)context->uds_session;
 
     //  Length check
-    if(buffers.request.len < 1) {
+    if(buffers.request.buf_len < 1) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
@@ -193,7 +193,7 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
     //  Length check
-    if(buffers.request.len != 2) {
+    if(buffers.request.buf_len != 2) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
@@ -205,7 +205,7 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     buffers.response.data[0] = local_id >> 8;
     buffers.response.data[1] = local_id & 0xFF;
     uint8_t* shifted_response_data = buffers.response.data + 2;
-    size_t shifted_response_len_max = buffers.response.len - 2;
+    size_t shifted_response_len_max = buffers.response.buf_len - 2;
 
     //  Find and return
     size_t return_len = uds_lookup_value_read(context->uds_session, uds_response, local_id, context->security_level, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);
@@ -217,7 +217,7 @@ size_t service_write_by_local_id(const uds_function_context_t* context, uds_resp
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
     //  Length check
-    if(buffers.request.len < 2) {
+    if(buffers.request.buf_len < 2) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
@@ -227,13 +227,13 @@ size_t service_write_by_local_id(const uds_function_context_t* context, uds_resp
 
     //  Shifted input buffer to pass in
     const uint8_t* shifted_data = buffers.request.data + 2;
-    size_t shifted_data_len = buffers.request.len - 2;
+    size_t shifted_data_len = buffers.request.buf_len - 2;
 
     //  Prepare response buffer
     buffers.response.data[0] = local_id >> 8;
     buffers.response.data[1] = local_id & 0xFF;
     uint8_t* shifted_response_data = buffers.response.data + 2;
-    size_t shifted_response_len_max = buffers.response.len - 2;
+    size_t shifted_response_len_max = buffers.response.buf_len - 2;
 
     //  Find and write
     size_t ret_len = uds_lookup_value_write(context->uds_session, uds_response, local_id, context->security_level, shifted_data, shifted_data_len, values, sizeof(values) / sizeof(uds_lookup_value_t), shifted_response_data, shifted_response_len_max);

@@ -13,7 +13,7 @@ extern "C" {
  */
 typedef struct {
     uint8_t* data;
-    const size_t len;
+    const size_t buf_len;
 } uds_buf_t;
 
 /**

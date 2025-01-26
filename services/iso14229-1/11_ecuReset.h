@@ -44,9 +44,8 @@ typedef struct {
  * @brief (Server) Encode positive response data to respond to clients request
  * 
  * @param query Struct containing request data
- * @param buf Buffer to place response into
- * @param buf_len Length of response buffer
- * @return size_t Length of response data
+ * @param ret_buf Buffer to place response into
+ * @return size_t Length of response data (0 if failed to encode)
  */
 size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf);
 
@@ -55,7 +54,6 @@ size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query,
  * 
  * @param query Query to place decoded data into
  * @param buf Buffer containing request data
- * @param buf_len Length of request
  * @return UDS_NRC_t UDS_NRC_PR or error if request is invalid
  */
 UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, uds_buf_t* buf);
@@ -63,10 +61,9 @@ UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, uds_buf_t* 
 /**
  * @brief (Client) Encode request to send to server
  * 
- * @param query 
- * @param buf 
- * @param buf_len 
- * @return size_t 
+ * @param query Query to send
+ * @param ret_buf Buffer to place response data into
+ * @return size_t Size of encoded request (0 if failed to encode)
  */
 size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf);
 
