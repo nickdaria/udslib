@@ -8,9 +8,10 @@ extern "C" {
 #include "../protocol/uds_negative_response.h"
 
 typedef struct {
-    size_t (*clientEncodeRequest)(const void* request, uds_buf_t* ret_buf);
+    const uint8_t sid;
+    size_t (*clientEncodeRequest)(const void* request, uds_buf_t ret_buf);
     bool (*clientDecodeResponse)(void* response, const uds_buf_t buf);
-    size_t (*serverEncodeResponse)(const void* response, uds_buf_t* ret_buf);
+    size_t (*serverEncodeResponse)(const void* response, uds_buf_t ret_buf);
     UDS_NRC_t (*serverDecodeRequest)(void* request, const uds_buf_t buf);
 } UDS_SERVICE_IMPLEMENTATION_t;
 

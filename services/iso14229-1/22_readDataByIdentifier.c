@@ -1,10 +1,10 @@
 #include "22_readDataByIdentifer.h"
 
-size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
+size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
     const UDS_22_RDBI_response* rResponse = (const UDS_22_RDBI_response*)response;
 
     //  Safety
-    if(rResponse == NULL || rResponse->request.data_identifier == NULL || rResponse->data_identifier_value == NULL || ret_buf == NULL || ret_buf->data == NULL) {
+    if(rResponse == NULL || rResponse->request.data_identifier == NULL || rResponse->data_identifier_value == NULL|| ret_buf.data == NULL) {
         return 0;
     }
 
@@ -16,7 +16,7 @@ size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
     }
 
     //  Sufficient buffer length check
-    if (did_size + did_value_size > ret_buf->bufLen) {
+    if (did_size + did_value_size > ret_buf.bufLen) {
         return 0;
     }
 
@@ -24,14 +24,14 @@ size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
 
     for(size_t i = 0; i < rResponse->request.elements_count; i++) {
         //  MSB
-        ret_buf->data[offset++] = (rResponse->request.data_identifier[i] >> 8) & 0xFF;
+        ret_buf.data[offset++] = (rResponse->request.data_identifier[i] >> 8) & 0xFF;
 
         //  LSB
-        ret_buf->data[offset++] = rResponse->request.data_identifier[i] & 0xFF;
+        ret_buf.data[offset++] = rResponse->request.data_identifier[i] & 0xFF;
 
         //  Copy data
         for(size_t j = 0; j < rResponse->data_identifier_value[i].bufLen; j++) {
-            ret_buf->data[offset++] = ((uint8_t*)rResponse->data_identifier_value[i].data)[j];
+            ret_buf.data[offset++] = rResponse->data_identifier_value[i].data[j];
         }
     }
 
@@ -114,7 +114,7 @@ UDS_NRC_t x22_RDBI_serverDecodeRequest(void* request, const uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x22_RDBI_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
+size_t x22_RDBI_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
     const UDS_22_RDBI_request* rQuery = (const UDS_22_RDBI_request*)request;
 
     //  DID argument check
@@ -128,7 +128,7 @@ size_t x22_RDBI_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
     }
     
     //  Sufficient buffer length check
-    if(ret_buf->bufLen < rQuery->elements_count * 2 || rQuery->elements_count > (SIZE_MAX / 2)) {
+    if(ret_buf.bufLen < rQuery->elements_count * 2 || rQuery->elements_count > (SIZE_MAX / 2)) {
         return 0;
     }
 
@@ -136,16 +136,17 @@ size_t x22_RDBI_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
     size_t offset = 0;
     for(size_t i = 0; i < rQuery->elements_count; i++) {
         //  MSB
-        ret_buf->data[offset++] = (rQuery->data_identifier[i] >> 8) & 0xFF;
+        ret_buf.data[offset++] = (rQuery->data_identifier[i] >> 8) & 0xFF;
 
         //  LSB
-        ret_buf->data[offset++] = rQuery->data_identifier[i] & 0xFF;
+        ret_buf.data[offset++] = rQuery->data_identifier[i] & 0xFF;
     }
 
     return offset;
 }
 
 UDS_SERVICE_IMPLEMENTATION_t UDS_22_RDBI = {
+    .sid = UDS_SID_RDBI,
     .clientEncodeRequest = x22_RDBI_clientEncodeRequest,
     .clientDecodeResponse = NULL,
     .serverEncodeResponse = x22_RDBI_serverEncodeResponse,

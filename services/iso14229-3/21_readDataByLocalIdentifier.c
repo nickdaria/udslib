@@ -1,26 +1,26 @@
 #include "21_readDataByLocalIdentifier.h"
 
-size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, uds_buf_t* ret_buf) {
+size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, uds_buf_t ret_buf) {
     const UDS_21_RDBLI_response* rResponse = (const UDS_21_RDBLI_response*)response;
 
     //  Safety
-    if(rResponse == NULL || rResponse->value.data == NULL || ret_buf->data == NULL) {
+    if(rResponse == NULL || rResponse->value.data == NULL || ret_buf.data == NULL) {
         return 0;
     }
 
     //  Sufficient buffer length check
-    if (ret_buf->bufLen < rResponse->value_len + 1) {
+    if (ret_buf.bufLen < rResponse->value_len + 1) {
         return 0;
     }
 
     size_t offset = 0;
 
     //  Copy identifier
-    ret_buf->data[offset++] = rResponse->request.local_identifier;
+    ret_buf.data[offset++] = rResponse->request.local_identifier;
 
     //  Copy data
     for(size_t i = 0; i < rResponse->value_len; i++) {
-        ret_buf->data[offset++] = rResponse->value.data[i];
+        ret_buf.data[offset++] = rResponse->value.data[i];
     }
 
     return offset;
@@ -75,26 +75,27 @@ UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* request, uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x21_RDBLI_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
+size_t x21_RDBLI_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
     //  Safety
-    if(request == NULL || ret_buf == NULL || ret_buf->data == NULL) {
+    if(request == NULL || ret_buf.data == NULL) {
         return 0;
     }
 
     const UDS_21_RDBLI_request* rQuery = (const UDS_21_RDBLI_request*)request;
 
     //  Sufficient buffer length check
-    if (ret_buf->bufLen < 1) {
+    if (ret_buf.bufLen < 1) {
         return 0;
     }
 
     //  Copy identifier
-    ret_buf->data[0] = rQuery->local_identifier;
+    ret_buf.data[0] = rQuery->local_identifier;
 
     return 1;
 }
 
 UDS_SERVICE_IMPLEMENTATION_t UDS_21_RDBLI = (UDS_SERVICE_IMPLEMENTATION_t) {
+    .sid = UDS_SID_RDBLI,
     .clientEncodeRequest = x21_RDBLI_clientEncodeRequest,
     .clientDecodeResponse = x21_RDBLI_decodePositiveResponse,
     .serverEncodeResponse = x21_RDBLI_serverEncodePositiveResponse,

@@ -4,18 +4,19 @@
 extern "C" {
 #endif
 
+#include "../services/uds_service_framework.h"
 #include "../lookup/uds_buf.h"
 #include "../protocol/uds_services.h"
 
 /**
- * @brief Simple helper that sets the service ID and returns a pointer to an offset buffer
+ * @brief Executes a services request build routine into a provided buffer
  * 
- * @param service_id 
- * @param buf 
- * @return uds_buf_t 
+ * @param service Pointer to service implementation struct
+ * @param requestStruct Pointer to service-specific request struct
+ * @param buffers Buffer to place response into
+ * @return size_t Size of request (or 0 if failed to generate due to missing function or buffer size contraints)
  */
-uds_buf_t uds_client_prepare_request(UDS_SID_t service_id, const uds_buf_t buf);
-
+size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, const void* requestStruct, uds_buf_t ret_buf);
 
 #ifdef __cplusplus
 }

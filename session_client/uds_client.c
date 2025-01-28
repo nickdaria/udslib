@@ -1,17 +1,31 @@
 #include "uds_client.h"
 
-uds_buf_t uds_client_prepare_request(UDS_SID_t service_id, const uds_buf_t buf) {
+size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, const void* requestStruct, uds_buf_t ret_buf) {
     //  Safety
-    if(buf.bufLen < 1) {
-        return (uds_buf_t) {
-            .data = NULL,
-            .bufLen = 0
-        };
+    if(service == NULL || requestStruct == NULL || ret_buf.data == NULL || ret_buf.bufLen == 0) {
+        return 0;
     }
 
-    //  Service ID
-    buf.data[0] = service_id;
+    //  Safety
+    if(service->clientEncodeRequest == NULL) {
+        return 0;
+    }
 
-    //  Offset ret buf
-    return uds_buf_offset(buf, 1, NULL);
+    //  Assemble request
+    size_t offset = 0;
+
+    //  Place SID
+    ret_buf.data[offset++] = service->sid;
+
+    //  Execute request
+    size_t svcRet = service->clientEncodeRequest(requestStruct, ret_buf);
+    offset += svcRet;
+
+    //  Check for error
+    if(svcRet == 0) {
+        return 0;
+    }
+
+    //  Return total size
+    return offset;
 }

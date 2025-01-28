@@ -293,7 +293,7 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
         .value = response_buf,
         .value_len = length_of_test_data
     };
-    size_t return_len = UDS_21_RDBLI.serverEncodeResponse(&response, &buffers.response);
+    size_t return_len = UDS_21_RDBLI.serverEncodeResponse(&response, buffers.response);
     free(response_buf.data);
 
     if(return_len == 0) {
