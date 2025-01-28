@@ -48,11 +48,11 @@ typedef struct {
 
     //  Total size of allocated space
     size_t elements_size;
-} UDS_22_RDBI_query;
+} UDS_22_RDBI_request;
 
 typedef struct {
     //  Associated request
-    UDS_22_RDBI_query query;
+    UDS_22_RDBI_request request;
 
     //  Data
     uds_buf_t* data_identifier_value;

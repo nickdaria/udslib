@@ -16,7 +16,7 @@ size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, uds_buf_t* r
     size_t offset = 0;
 
     //  Copy identifier
-    ret_buf->data[offset++] = rResponse->query.local_identifier;
+    ret_buf->data[offset++] = rResponse->request.local_identifier;
 
     //  Copy data
     for(size_t i = 0; i < rResponse->value_len; i++) {
@@ -42,7 +42,7 @@ bool x21_RDBLI_decodePositiveResponse(void* response, uds_buf_t buf) {
     size_t offset = 0;
 
     //  Copy identifier
-    rResponse->query.local_identifier = buf.data[offset++];
+    rResponse->request.local_identifier = buf.data[offset++];
 
     //  Copy data
     for(size_t i = 0; i < buf.buf_len - 1; i++) {
@@ -56,13 +56,13 @@ bool x21_RDBLI_decodePositiveResponse(void* response, uds_buf_t buf) {
     return true;
 }
 
-UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* query, uds_buf_t buf) {
+UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* request, uds_buf_t buf) {
     //  Safety
-    if(query == NULL || buf.data == NULL) {
+    if(request == NULL || buf.data == NULL) {
         return UDS_NRC_IMLOIF;
     }
 
-    UDS_21_RDBLI_query* rQuery = (UDS_21_RDBLI_query*)query;
+    UDS_21_RDBLI_request* rQuery = (UDS_21_RDBLI_request*)request;
 
     //  Minimum length check
     if (buf.buf_len != 1) {
@@ -75,13 +75,13 @@ UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* query, uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x21_RDBLI_clientEncodeRequest(const void* query, uds_buf_t* ret_buf) {
+size_t x21_RDBLI_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
     //  Safety
-    if(query == NULL || ret_buf == NULL || ret_buf->data == NULL) {
+    if(request == NULL || ret_buf == NULL || ret_buf->data == NULL) {
         return 0;
     }
 
-    const UDS_21_RDBLI_query* rQuery = (const UDS_21_RDBLI_query*)query;
+    const UDS_21_RDBLI_request* rQuery = (const UDS_21_RDBLI_request*)request;
 
     //  Sufficient buffer length check
     if (ret_buf->buf_len < 1) {

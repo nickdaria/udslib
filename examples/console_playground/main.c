@@ -253,11 +253,11 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     printf("Read by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
-    UDS_21_RDBLI_query query;
-    uds_response->error_code = UDS_21_RDBLI.serverDecodeRequest(&query, buffers.request);
+    UDS_21_RDBLI_request request;
+    uds_response->error_code = UDS_21_RDBLI.serverDecodeRequest(&request, buffers.request);
 
     //  Testing - just return incrementing bytes with length of request byte
-    size_t length_of_test_data = query.local_identifier;
+    size_t length_of_test_data = request.local_identifier;
     size_t length_of_test_resp = length_of_test_data + 1;
 
     uds_buf_t response_buf = {
@@ -269,7 +269,7 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     }
 
     UDS_21_RDBLI_response response = {
-        .query = query,
+        .request = request,
         .value = response_buf,
         .value_len = length_of_test_data
     };

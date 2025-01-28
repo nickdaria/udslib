@@ -23,8 +23,8 @@ size_t x11_ER_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
     return response_len;
 }
 
-UDS_NRC_t x11_ER_serverDecodeRequest(void* query, const uds_buf_t buf) {
-    UDS_11_ER_request_t* rQuery = (UDS_11_ER_request_t*)query;
+UDS_NRC_t x11_ER_serverDecodeRequest(void* request, const uds_buf_t buf) {
+    UDS_11_ER_request_t* rQuery = (UDS_11_ER_request_t*)request;
 
     //  Safety
     if(rQuery == NULL || buf.data == NULL) {
@@ -52,8 +52,8 @@ UDS_NRC_t x11_ER_serverDecodeRequest(void* query, const uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x11_ER_clientEncodeRequest(const void* query, uds_buf_t* ret_buf) {
-    const UDS_11_ER_request_t* rQuery = (const UDS_11_ER_request_t*)query;
+size_t x11_ER_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
+    const UDS_11_ER_request_t* rQuery = (const UDS_11_ER_request_t*)request;
 
     //  Safety
     if(rQuery == NULL || ret_buf->data == NULL) {

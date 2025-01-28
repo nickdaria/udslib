@@ -19,7 +19,7 @@ typedef struct {
 
 
 /**
- * @brief Common struct for setting up query and response buffers and passing them through the UDS stack
+ * @brief Common struct for setting up request and response buffers and passing them through the UDS stack
  * 
  */
 typedef struct {
