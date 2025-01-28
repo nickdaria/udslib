@@ -28,6 +28,12 @@ typedef struct {
      * 
      */
     size_t services_table_len;
+
+    /**
+     * @brief Allows the user to point to a custom struct for each session with additional/proprietary fields
+     * 
+     */
+    const void* user_custom_struct;
 } uds_session_t;
 
 /**

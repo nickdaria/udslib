@@ -31,6 +31,11 @@ typedef struct {
      *  1 = Default session
      */
     const uint8_t security_level;
+
+    /**
+     * @brief Pointer to user-defined struct for additional customization per-resource
+     */
+    const void* user_custom_struct;
 } uds_resource_t;
 
 #ifdef __cplusplus
