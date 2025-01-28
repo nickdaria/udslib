@@ -254,9 +254,8 @@ size_t service_write_by_id(const uds_function_context_t* context, uds_response_d
     //  Get local ID
     uint16_t local_id = (buffers.request.data[0] << 8) | buffers.request.data[1];
 
-    //  Shifted input buffer to pass in
-    const uint8_t* shifted_data = buffers.request.data + 2;
-    size_t shifted_data_len = buffers.request.bufLen - 2;
+    //  Get buffer with response data
+    uds_buf_t shifted_request_data = uds_buf_offset(buffers.request, 2, NULL);
 
     //  Prepare response buffer
     size_t offset = 0;
@@ -266,8 +265,8 @@ size_t service_write_by_id(const uds_function_context_t* context, uds_response_d
     uds_buf_t shifted_response_data = uds_buf_offset(buffers.response, offset, NULL);
 
     //  Find and write
-    size_t ret_len = uds_lookup_value_write(context->uds_session, uds_response, shifted_response_data, local_id, context->security_level, shifted_data, shifted_data_len, values, sizeof(values) / sizeof(uds_lookup_value_t));
-    return ret_len + 2;
+    offset += uds_lookup_value_write(context->uds_session, uds_response, shifted_response_data, local_id, context->security_level, shifted_request_data, values, sizeof(values) / sizeof(uds_lookup_value_t));
+    return offset;
 }
 
 size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {

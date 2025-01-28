@@ -49,7 +49,7 @@ typedef struct {
 size_t uds_lookup_value_read(const void* session, uds_response_data_t* uds_response, uds_buf_t response_data, const uint16_t resource_id, const uint8_t security_level, const uds_lookup_value_t* table, const size_t table_len);
 
 //  TODO: Docs
-size_t uds_lookup_value_write(const void* session, uds_response_data_t* uds_response, uds_buf_t response_data, const uint16_t resource_id, const uint8_t security_level, const uint8_t* data, const size_t data_len, const uds_lookup_value_t* table, const size_t table_len);
+size_t uds_lookup_value_write(const void* session, uds_response_data_t* uds_response, uds_buf_t response_data, const uint16_t resource_id, const uint8_t security_level, const uds_buf_t request_data, const uds_lookup_value_t* table, const size_t table_len);
 
 #ifdef __cplusplus
 }
