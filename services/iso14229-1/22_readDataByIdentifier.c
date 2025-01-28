@@ -12,11 +12,11 @@ size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
     size_t did_size = rResponse->request.elements_count * 2;
     size_t did_value_size = 0;
     for(size_t i = 0; i < rResponse->request.elements_count; i++) {
-        did_value_size += rResponse->data_identifier_value[i].buf_len;
+        did_value_size += rResponse->data_identifier_value[i].bufLen;
     }
 
     //  Sufficient buffer length check
-    if (did_size + did_value_size > ret_buf->buf_len) {
+    if (did_size + did_value_size > ret_buf->bufLen) {
         return 0;
     }
 
@@ -30,7 +30,7 @@ size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
         ret_buf->data[offset++] = rResponse->request.data_identifier[i] & 0xFF;
 
         //  Copy data
-        for(size_t j = 0; j < rResponse->data_identifier_value[i].buf_len; j++) {
+        for(size_t j = 0; j < rResponse->data_identifier_value[i].bufLen; j++) {
             ret_buf->data[offset++] = ((uint8_t*)rResponse->data_identifier_value[i].data)[j];
         }
     }
@@ -45,7 +45,7 @@ size_t x22_RDBI_clientGetNextDID(const uds_buf_t* buf, uint16_t* ret_DID) {
     }
 
     //  Minimum length check
-    if (buf->buf_len < 2) {
+    if (buf->bufLen < 2) {
         return 0;
     }
 
@@ -63,12 +63,12 @@ size_t x22_RDBI_clientGetNextValue(const uds_buf_t* buf, const size_t DID_size, 
     }
 
     //  Input minimum length check
-    if (buf->buf_len < DID_size) {
+    if (buf->bufLen < DID_size) {
         return 0;
     }
 
     //  Output minimum length check
-    if (ret_value->buf_len < DID_size) {
+    if (ret_value->bufLen < DID_size) {
         return 0;
     }
 
@@ -90,17 +90,17 @@ UDS_NRC_t x22_RDBI_serverDecodeRequest(void* request, const uds_buf_t buf) {
     }
     
     //  Minimum length check
-    if (buf.buf_len < 2) {
+    if (buf.bufLen < 2) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Modulo 2 Division Check
-    if (buf.buf_len % 2 != 0) {
+    if (buf.bufLen % 2 != 0) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Too long check
-    size_t element_count = buf.buf_len / 2;
+    size_t element_count = buf.bufLen / 2;
     if (element_count > rQuery->elements_size) {
         return UDS_NRC_RESPONSE_TOO_LONG;
     }
@@ -128,7 +128,7 @@ size_t x22_RDBI_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
     }
     
     //  Sufficient buffer length check
-    if(ret_buf->buf_len < rQuery->elements_count * 2 || rQuery->elements_count > (SIZE_MAX / 2)) {
+    if(ret_buf->bufLen < rQuery->elements_count * 2 || rQuery->elements_count > (SIZE_MAX / 2)) {
         return 0;
     }
 

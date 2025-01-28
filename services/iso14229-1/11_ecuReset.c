@@ -16,7 +16,7 @@ size_t x11_ER_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
     ret_buf->data[response_len++] = uds_subfunc_encode(rResponse->request.resetType);
 
     //  Power Down Time (if ERPSD)
-    if(rResponse->request.resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->buf_len >= 2) {
+    if(rResponse->request.resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->bufLen >= 2) {
         ret_buf->data[response_len++] = rResponse->request.powerDownTime;
     }
 
@@ -32,7 +32,7 @@ UDS_NRC_t x11_ER_serverDecodeRequest(void* request, const uds_buf_t buf) {
     }
 
     //  Size check
-    if(buf.buf_len < 1) {
+    if(buf.bufLen < 1) {
         return UDS_NRC_IMLOIF;
     }
 
@@ -42,7 +42,7 @@ UDS_NRC_t x11_ER_serverDecodeRequest(void* request, const uds_buf_t buf) {
     //  Power down type (if ERPSD)
     if(rQuery->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD) {
         //  Size check (power down type expected)
-        if(buf.buf_len < 2) {
+        if(buf.bufLen < 2) {
             return UDS_NRC_IMLOIF;
         }
 
@@ -61,7 +61,7 @@ size_t x11_ER_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
     }
 
     //  Size check
-    if(ret_buf->buf_len < 1) {
+    if(ret_buf->bufLen < 1) {
         return 0;
     }
 
@@ -72,7 +72,7 @@ size_t x11_ER_clientEncodeRequest(const void* request, uds_buf_t* ret_buf) {
     ret_buf->data[request_len++] = uds_subfunc_encode(rQuery->resetType);
 
     //  Power Down Time (if ERPSD)
-    if(rQuery->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->buf_len >= 2) {
+    if(rQuery->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->bufLen >= 2) {
         ret_buf->data[request_len++] = rQuery->powerDownTime;
     }
 

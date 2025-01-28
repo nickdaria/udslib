@@ -14,7 +14,7 @@ extern "C" {
  */
 typedef struct {
     uint8_t* data;
-    const size_t buf_len;
+    const size_t bufLen;
 } uds_buf_t;
 
 
@@ -36,6 +36,16 @@ typedef struct {
  * @return uds_buf_t New buffer
  */
 uds_buf_t uds_buf_offset(const uds_buf_t source, const size_t offset, bool* success);
+
+/**
+ * @brief Copies data and enforces big-endian format
+ * 
+ * @param destination Destination to copy to
+ * @param source Source buffer and size to copy
+ * @param numericType If true and system is little endian, byte order is reversed
+ * @return size_t 
+ */
+size_t uds_big_endian_copy(uint8_t* destination, const uds_buf_t source, const bool numericType);
 
 #ifdef __cplusplus
 }

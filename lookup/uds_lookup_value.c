@@ -11,17 +11,16 @@ size_t value_read(const void* session,
                     const uint16_t resource_id, 
                     const uint8_t security_level, 
                     const uds_lookup_value_t* value_entry, 
-                    uint8_t* response_data, 
-                    const size_t response_len)
+                    uds_buf_t response_data)
 {
     //  Read pointer not set
-    if(value_entry->data_read_ptr == NULL) {
+    if(value_entry->buf.data == NULL) {
         uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
 
     //  Read security level is 0 (disabled)
-    if(value_entry->data_read_ptr == 0) {
+    if(value_entry->base.security_level == 0) {
         uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
         return 0;
     }
@@ -32,32 +31,34 @@ size_t value_read(const void* session,
         return 0;
     }
 
-    //  Copy data
-    memcpy(response_data, value_entry->data_read_ptr, value_entry->data_len);
+    //  Not enough room
+    if(response_data.bufLen < value_entry->buf.bufLen) {
+        uds_response->error_code = UDS_NRC_RESPONSE_TOO_LONG;
+        return 0;
+    }
 
     //  Positive ack
     uds_response->error_code = UDS_NRC_PR;
 
-    //  Done
-    return value_entry->data_len;
+    //  Copy data
+    return uds_big_endian_copy(response_data.data, value_entry->buf, value_entry->numericType);
 }
 
 size_t uds_lookup_value_read(const void* session, 
                                 uds_response_data_t* uds_response, 
+                                uds_buf_t response_data,
                                 const uint16_t resource_id, 
                                 const uint8_t security_level, 
                                 const uds_lookup_value_t* table, 
-                                const size_t table_len, 
-                                uint8_t* response_data, 
-                                const size_t response_len) 
+                                const size_t table_len) 
 {
-    if(uds_response == NULL || table == NULL || response_data == NULL || response_len == 0) {
+    if(uds_response == NULL || table == NULL || response_data.data == NULL) {
         return false;
     }
 
     for(size_t i = 0; i < table_len; i++) {
         if(table[i].base.id == resource_id) {
-            return value_read(session, uds_response, resource_id, security_level, &table[i], response_data, response_len);
+            return value_read(session, uds_response, resource_id, security_level, &table[i], response_data);
         }
     }
 
@@ -67,13 +68,12 @@ size_t uds_lookup_value_read(const void* session,
 
 size_t value_write(const void* session, 
                     uds_response_data_t* uds_response, 
+                    uds_buf_t response_data,
                     const uint16_t resource_id, 
                     const uint8_t security_level, 
                     const uint8_t* data, 
                     const size_t data_len, 
-                    const uds_lookup_value_t* value_entry, 
-                    uint8_t* response_data, 
-                    const size_t response_len) 
+                    const uds_lookup_value_t* value_entry) 
 {
     //  Write pointer not set
     if(value_entry->data_write_ptr == NULL) {
@@ -94,13 +94,13 @@ size_t value_write(const void* session,
     }
 
     //  Length mismatch
-    if(data_len != value_entry->data_len) {
+    if(data_len != value_entry->buf.bufLen) {
         uds_response->error_code = UDS_NRC_INCORRECT_MESSAGE_LENGTH_OR_INVALID_FORMAT;
         return 0;
     }
 
     //  Execute write
-    memcpy(value_entry->data_write_ptr, data, data_len);
+    memcpy(value_entry->data_write_ptr, data, value_entry->buf.bufLen);
 
     //  Done
     uds_response->error_code = UDS_NRC_PR;
@@ -110,22 +110,21 @@ size_t value_write(const void* session,
 
 size_t uds_lookup_value_write(const void* session, 
                                 uds_response_data_t* uds_response,
+                                uds_buf_t response_data,
                                 const uint16_t resource_id, 
                                 const uint8_t security_level, 
                                 const uint8_t* data, 
                                 const size_t data_len, 
                                 const uds_lookup_value_t* table, 
-                                const size_t table_len, 
-                                uint8_t* response_data, 
-                                const size_t response_len) 
+                                const size_t table_len) 
 {
-    if(uds_response == NULL || table == NULL || response_data == NULL || response_len == 0) {
+    if(uds_response == NULL || table == NULL || response_data.data == NULL) {
         return false;
     }
 
     for(size_t i = 0; i < table_len; i++) {
         if(table[i].base.id == resource_id) {
-            return value_write(session, uds_response, resource_id, security_level, data, data_len, &table[i], response_data, response_len);
+            return value_write(session, uds_response, response_data, resource_id, security_level, data, data_len, &table[i]);
         }
     }
 
@@ -133,36 +132,3 @@ size_t uds_lookup_value_write(const void* session,
     uds_response->error_code = UDS_NRC_SUBFUNCTION_NOT_SUPPORTED;
     return 0;
 }
-
-/*
-    Initializers
-*/
-// uds_lookup_value_t uds_lookup_value_init_r(const uint16_t id, const char* name, const uint8_t security_level, const uint8_t* data_ptr, const size_t data_len) {
-//     uds_lookup_value_t entry = {
-//         .base = { id, name, security_level },
-//         .data_read_ptr = data_ptr,
-//         .data_write_ptr = NULL,
-//         .data_len = data_len
-//     };
-//     return entry;
-// }
-
-// uds_lookup_value_t uds_lookup_value_init_rw(const uint16_t id, const char* name, const uint8_t security_level, const uint8_t security_level_write, uint8_t* data_ptr, const size_t data_len) {
-//     uds_lookup_value_t entry = {
-//         .base = { id, name, security_level },
-//         .data_read_ptr = data_ptr,
-//         .data_write_ptr = data_ptr,
-//         .data_len = data_len
-//     };
-//     return entry;
-// }
-
-// uds_lookup_value_t uds_lookup_value_init_rw_distinct(const uint16_t id, const char* name, const uint8_t security_level, const uint8_t security_level_write, const uint8_t* data_read_ptr, uint8_t* data_write_ptr, const size_t data_len) {
-//     uds_lookup_value_t entry = {
-//         .base = { id, name, security_level },
-//         .data_read_ptr = data_read_ptr,
-//         .data_write_ptr = data_write_ptr,
-//         .data_len = data_len
-//     };
-//     return entry;
-// }
