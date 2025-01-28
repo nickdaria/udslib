@@ -21,20 +21,10 @@ size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers)
     //  Extract SID
     uint8_t service_id = buffers.request.data[UDS_PROTOCOL_SERVICE_IDX];
 
-    uds_buf_t rx_buf = {
-        .data = buffers.request.data + UDS_PROTOCOL_SERVICE_IDX + 1,
-        .buf_len = buffers.request.buf_len - UDS_PROTOCOL_SERVICE_IDX - 1
-    };
-
-    uds_buf_t tx_buf = {
-        .data = buffers.response.data + 1,
-        .buf_len = buffers.response.buf_len - 1
-    };
-
     //  Build child buffer struct with offset for response
     uds_buffers_t service_buffers = {
-        .request = rx_buf,
-        .response = tx_buf
+        .request = uds_buf_offset(buffers.request, 1, NULL),
+        .response = uds_buf_offset(buffers.response, 1, NULL)
     };
 
     bool service_found = false;

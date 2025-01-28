@@ -6,6 +6,7 @@ extern "C" {
 
 #include "../../udslib.h"
 #include "../../protocol/uds_subfunction.h"
+#include "../uds_service_framework.h"
 
 /**
  *  ECU Reset (0x11)
@@ -40,32 +41,11 @@ typedef struct {
     size_t powerDownTime;
 } UDS_11_ER_request_t;
 
-/**
- * @brief (Server) Encode positive response data to respond to clients request
- * 
- * @param query Struct containing request data
- * @param ret_buf Buffer to place response into
- * @return size_t Length of response data (0 if failed to encode)
- */
-size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf);
+typedef struct {
+	UDS_11_ER_request_t request;
+} UDS_11_ER_response;
 
-/**
- * @brief (Server) Decode request from client
- * 
- * @param query Query to place decoded data into
- * @param buf Buffer containing request data
- * @return UDS_NRC_t UDS_NRC_PR or error if request is invalid
- */
-UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, uds_buf_t* buf);
-
-/**
- * @brief (Client) Encode request to send to server
- * 
- * @param query Query to send
- * @param ret_buf Buffer to place response data into
- * @return size_t Size of encoded request (0 if failed to encode)
- */
-size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf);
+extern UDS_SERVICE_IMPLEMENTATION_t UDS_11_ER;
 
 #ifdef __cplusplus
 }

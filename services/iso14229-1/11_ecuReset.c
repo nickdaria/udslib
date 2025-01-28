@@ -1,9 +1,11 @@
 #include "11_ecuReset.h"
 #include "../../protocol/uds_subfunction.h"
 
-size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf) {
+size_t x11_ER_serverEncodeResponse(const void* response, uds_buf_t* ret_buf) {
+    const UDS_11_ER_response* rResponse = (const UDS_11_ER_response*)response;
+    
     //  Safety
-    if(query == NULL || ret_buf->data == NULL) {
+    if(rResponse == NULL || ret_buf->data == NULL) {
         return 0;
     }
 
@@ -11,46 +13,50 @@ size_t UDS_11_ER_server_encodePositiveResponse(const UDS_11_ER_request_t* query,
     size_t response_len = 0;
 
     //  Reset type
-    ret_buf->data[response_len++] = uds_subfunc_encode(query->resetType);
+    ret_buf->data[response_len++] = uds_subfunc_encode(rResponse->request.resetType);
 
     //  Power Down Time (if ERPSD)
-    if(query->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->buf_len >= 2) {
-        ret_buf->data[response_len++] = query->powerDownTime;
+    if(rResponse->request.resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->buf_len >= 2) {
+        ret_buf->data[response_len++] = rResponse->request.powerDownTime;
     }
 
     return response_len;
 }
 
-UDS_NRC_t UDS_11_ER_server_decodeRequest(UDS_11_ER_request_t* query, uds_buf_t* buf) {
+UDS_NRC_t x11_ER_serverDecodeRequest(void* query, const uds_buf_t buf) {
+    UDS_11_ER_request_t* rQuery = (UDS_11_ER_request_t*)query;
+
     //  Safety
-    if(query == NULL || buf == NULL) {
+    if(rQuery == NULL || buf.data == NULL) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Size check
-    if(buf->buf_len < 1) {
+    if(buf.buf_len < 1) {
         return UDS_NRC_IMLOIF;
     }
 
     //  Decode subfunction (resetType) and suppressPosRspMsgIndicationBit from subfunction byte
-    query->resetType = uds_subfunc_decode(buf->data[0]);
+    rQuery->resetType = uds_subfunc_decode(buf.data[0]);
 
     //  Power down type (if ERPSD)
-    if(query->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD) {
+    if(rQuery->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD) {
         //  Size check (power down type expected)
-        if(buf->buf_len < 2) {
+        if(buf.buf_len < 2) {
             return UDS_NRC_IMLOIF;
         }
 
-        query->powerDownTime = buf->data[1];
+        rQuery->powerDownTime = buf.data[1];
     }
 
     return UDS_NRC_PR;
 }
 
-size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uds_buf_t* ret_buf) {
+size_t x11_ER_clientEncodeRequest(const void* query, uds_buf_t* ret_buf) {
+    const UDS_11_ER_request_t* rQuery = (const UDS_11_ER_request_t*)query;
+
     //  Safety
-    if(query == NULL || ret_buf->data == NULL) {
+    if(rQuery == NULL || ret_buf->data == NULL) {
         return 0;
     }
 
@@ -63,12 +69,19 @@ size_t UDS_11_ER_client_encodeRequest(const UDS_11_ER_request_t* query, uds_buf_
     size_t request_len = 0;
 
     //  Reset type
-    ret_buf->data[request_len++] = uds_subfunc_encode(query->resetType);
+    ret_buf->data[request_len++] = uds_subfunc_encode(rQuery->resetType);
 
     //  Power Down Time (if ERPSD)
-    if(query->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->buf_len >= 2) {
-        ret_buf->data[request_len++] = query->powerDownTime;
+    if(rQuery->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf->buf_len >= 2) {
+        ret_buf->data[request_len++] = rQuery->powerDownTime;
     }
 
     return request_len;
 }
+
+UDS_SERVICE_IMPLEMENTATION_t UDS_11_ER = {
+    .clientDecodeResponse = NULL,
+    .clientEncodeRequest = x11_ER_clientEncodeRequest,
+    .serverEncodeResponse = x11_ER_serverEncodeResponse,
+    .serverDecodeRequest = x11_ER_serverDecodeRequest
+};

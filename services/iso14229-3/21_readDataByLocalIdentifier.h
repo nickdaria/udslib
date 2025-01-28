@@ -6,6 +6,7 @@ extern "C" {
 
 #include "../../udslib.h"
 #include "../../protocol/uds_subfunction.h"
+#include "../uds_service_framework.h"
 
 /**
  *  Read Data by Local Identifier (0x21)
@@ -18,17 +19,11 @@ typedef struct {
 
 typedef struct {
     UDS_21_RDBLI_query query;
-    uds_buf_t* value;
+    uds_buf_t value;
     size_t value_len;
 } UDS_21_RDBLI_response;
 
-size_t UDS_21_RDBLI_server_encodePositiveResponse(const UDS_21_RDBLI_response* response, uds_buf_t* ret_buf);
-
-bool UDS_21_RDBLI_client_decodePositiveResponse(UDS_21_RDBLI_response* response, uds_buf_t buf);
-
-UDS_NRC_t UDS_21_RDBLI_server_decodeRequest(UDS_21_RDBLI_query* query, uds_buf_t buf);
-
-size_t UDS_21_client_encodeRequest(const UDS_21_RDBLI_query* query, uds_buf_t ret_buf);
+extern UDS_SERVICE_IMPLEMENTATION_t UDS_21_RDBLI;
 
 #ifdef __cplusplus
 }
