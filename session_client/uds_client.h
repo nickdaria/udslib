@@ -18,6 +18,25 @@ extern "C" {
  */
 size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, const void* requestStruct, uds_buf_t ret_buf);
 
+/**
+ * @brief Called on a new message to get the service ID and instantiate the appropriate response struct type
+ * 
+ * @param buf Buffer containing response data
+ * @return UDS_SID_t Service ID (or 0xFF if invalid/no data)
+ */
+UDS_SID_t uds_client_response_get_sid(const uds_buf_t buf);
+
+/**
+ * @brief Called after getting the SID of a response with that responses struct to load the response data into
+ * 
+ * @param service Service framework implementation which must include clientDecodeResponse
+ * @param response_buf Buffer containing response data
+ * @param response_struct Pointer to response struct you initialized based on uds_client_response_get_sid
+ * @return true Successfully deoded response
+ * @return false Failed to decode response (thrown by response method or calling method safeties)
+ */
+bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, const uds_buf_t response_buf, void* response_struct);
+
 #ifdef __cplusplus
 }
 #endif
