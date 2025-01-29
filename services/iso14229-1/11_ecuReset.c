@@ -13,10 +13,10 @@ size_t x11_ER_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
     size_t response_len = 0;
 
     //  Reset type
-    ret_buf.data[response_len++] = uds_subfunc_encode(rResponse->request.resetType);
+    ret_buf.data[response_len++] = rResponse->request.resetType.raw;
 
     //  Power Down Time (if ERPSD)
-    if(rResponse->request.resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf.bufLen >= 2) {
+    if(rResponse->request.resetType.protocol.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf.bufLen >= 2) {
         ret_buf.data[response_len++] = rResponse->request.powerDownTime;
     }
 
@@ -32,7 +32,7 @@ bool x11_ER_clientDecodeResponse(void* response, const uds_buf_t buf) {
     }
 
     //  Decode response
-    rResponse->request.resetType = uds_subfunc_decode(buf.data[0]);
+    rResponse->request.resetType.raw = buf.data[0];
 
     //  Power down time
     if(buf.bufLen > 1) {
@@ -60,10 +60,10 @@ UDS_NRC_t x11_ER_serverDecodeRequest(void* request, const uds_buf_t buf) {
     }
 
     //  Decode subfunction (resetType) and suppressPosRspMsgIndicationBit from subfunction byte
-    rQuery->resetType = uds_subfunc_decode(buf.data[0]);
+    rQuery->resetType.raw = buf.data[0];
 
     //  Power down type (if ERPSD)
-    if(rQuery->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD) {
+    if(rQuery->resetType.protocol.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD) {
         //  Size check (power down type expected)
         if(buf.bufLen < 2) {
             return UDS_NRC_IMLOIF;
@@ -92,10 +92,10 @@ size_t x11_ER_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
     size_t request_len = 0;
 
     //  Reset type
-    ret_buf.data[request_len++] = uds_subfunc_encode(rQuery->resetType);
+    ret_buf.data[request_len++] = rQuery->resetType.raw;
 
     //  Power Down Time (if ERPSD)
-    if(rQuery->resetType.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf.bufLen >= 2) {
+    if(rQuery->resetType.protocol.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf.bufLen >= 2) {
         ret_buf.data[request_len++] = rQuery->powerDownTime;
     }
 
