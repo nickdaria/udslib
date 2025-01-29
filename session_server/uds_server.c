@@ -6,7 +6,7 @@ void uds_server_init(uds_session_t* session, uds_lookup_function_t* services_tab
     session->security_level = UDS_PROTOCOL_DEFAULT_SESSION;
     session->services_table = services_table;
     session->services_table_len = services_table_len;
-    session->user_custom_struct = NULL;
+    session->addl_struct = NULL;
 }
 
 /*
@@ -15,7 +15,7 @@ void uds_server_init(uds_session_t* session, uds_lookup_function_t* services_tab
 size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers) {
     //  Build response
     uds_response_data_t uds_response = {
-        .send_response = true,
+        .suppress_response = false,
         .error_code = UDS_NRC_SERVICE_NOT_SUPPORTED
     };
 
@@ -42,6 +42,11 @@ size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers)
     if(!service_found) {
         //  Service not found
         uds_response.error_code = UDS_NRC_SERVICE_NOT_SUPPORTED;
+    }
+
+    //  Response not desired
+    if(uds_response.suppress_response) {
+        return 0;
     }
 
     //  Build response

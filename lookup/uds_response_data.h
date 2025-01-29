@@ -14,10 +14,10 @@ extern "C" {
  */
 typedef struct {
     /**
-     * @brief False to disable sending a response (if service has subfunction, set this to bit 7 - suppressPosRspMsgIndicationBit)
+     * @brief True to skip sending a response - typically set to suppressPosRspMsgIndicationBit extracted by uds_subfunc_decode
      * 
      */
-    bool send_response;
+    bool suppress_response;
 
     /**
      * @brief Error code response (0 = OK, > 0 = NACK/7F)

@@ -12,6 +12,7 @@
         "uds_subfunction.h": "c",
         "22_readdatabyidentifer.h": "c",
         "type_traits": "c",
-        "uds_service_framework.h": "c"
+        "uds_service_framework.h": "c",
+        "uds_protocol.h": "c"
     }
 }
