@@ -1,7 +1,7 @@
 #include "10_diagnosticSessionControl.h"
 
 size_t x10_DSC_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
-    const UDS_10_DSC_response* rResponse = (const UDS_10_DSC_response*)response;
+    const UDS_10_DSC_response_t* rResponse = (const UDS_10_DSC_response_t*)response;
 
     // Safety check
     if (response == NULL || ret_buf.data == NULL || ret_buf.bufLen < 1) {
@@ -18,7 +18,7 @@ size_t x10_DSC_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
 }
 
 bool x10_DSC_clientDecodeResponse(void* response, const uds_buf_t buf) {
-    UDS_10_DSC_response* rResponse = (UDS_10_DSC_response*)response;
+    UDS_10_DSC_response_t* rResponse = (UDS_10_DSC_response_t*)response;
 
     // Safety check
     if (response == NULL || buf.data == NULL || buf.bufLen < 1) {

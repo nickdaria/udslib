@@ -18,8 +18,11 @@ size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, con
     //  Place SID
     ret_buf.data[offset++] = service->sid;
 
+    //  Offset return buffer
+    uds_buf_t serviceBuf = uds_buf_offset(ret_buf, offset, NULL);
+
     //  Execute request
-    size_t svcRet = service->clientEncodeRequest(requestStruct, ret_buf);
+    size_t svcRet = service->clientEncodeRequest(requestStruct, serviceBuf);
     offset += svcRet;
 
     //  Check for error

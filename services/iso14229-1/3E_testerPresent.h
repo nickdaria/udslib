@@ -17,7 +17,7 @@ typedef struct {
 
 typedef struct {
 	UDS_3E_TP_request_t request;
-} UDS_3E_TP_response;
+} UDS_3E_TP_response_t;
 
 extern UDS_SERVICE_IMPLEMENTATION_t UDS_3E_TP;
 

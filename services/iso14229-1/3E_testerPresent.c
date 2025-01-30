@@ -1,7 +1,7 @@
 #include "3E_testerPresent.h"
 
 size_t x3E_TP_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
-    const UDS_3E_TP_response* rResponse = (const UDS_3E_TP_response*)response;
+    const UDS_3E_TP_response_t* rResponse = (const UDS_3E_TP_response_t*)response;
 
     // Safety checks
     if (response == NULL || ret_buf.data == NULL) {
@@ -23,7 +23,7 @@ size_t x3E_TP_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
 }
 
 bool x3E_TP_clientDecodeResponse(void* response, const uds_buf_t buf) {
-    UDS_3E_TP_response* rResponse = (UDS_3E_TP_response*)response;
+    UDS_3E_TP_response_t* rResponse = (UDS_3E_TP_response_t*)response;
 
     // Safety
     if (response == NULL || buf.data == NULL || buf.bufLen < 1) {

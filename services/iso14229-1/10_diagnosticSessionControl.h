@@ -48,7 +48,7 @@ typedef struct {
 
 typedef struct {
 	UDS_10_DSC_request_t request;
-} UDS_10_DSC_response;
+} UDS_10_DSC_response_t;
 
 extern UDS_SERVICE_IMPLEMENTATION_t UDS_10_DSC;
 
