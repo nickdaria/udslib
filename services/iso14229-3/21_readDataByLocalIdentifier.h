@@ -15,13 +15,13 @@ extern "C" {
 
 typedef struct {
     uint8_t local_identifier;
-} UDS_21_RDBLI_request;
+} UDS_21_RDBLI_request_t;
 
 typedef struct {
-    UDS_21_RDBLI_request request;
+    UDS_21_RDBLI_request_t request;
     uds_buf_t value;
     size_t value_len;
-} UDS_21_RDBLI_response;
+} UDS_21_RDBLI_response_t;
 
 extern UDS_SERVICE_IMPLEMENTATION_t UDS_21_RDBLI;
 

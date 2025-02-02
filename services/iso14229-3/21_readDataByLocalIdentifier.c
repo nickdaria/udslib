@@ -1,7 +1,7 @@
 #include "21_readDataByLocalIdentifier.h"
 
 size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, uds_buf_t ret_buf) {
-    const UDS_21_RDBLI_response* rResponse = (const UDS_21_RDBLI_response*)response;
+    const UDS_21_RDBLI_response_t* rResponse = (const UDS_21_RDBLI_response_t*)response;
 
     //  Safety
     if(rResponse == NULL || rResponse->value.data == NULL || ret_buf.data == NULL) {
@@ -27,7 +27,7 @@ size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, uds_buf_t re
 }
 
 bool x21_RDBLI_decodePositiveResponse(void* response, uds_buf_t buf) {
-    UDS_21_RDBLI_response* rResponse = (UDS_21_RDBLI_response*)response;
+    UDS_21_RDBLI_response_t* rResponse = (UDS_21_RDBLI_response_t*)response;
 
     //  Safety
     if(response == NULL || rResponse->value.data == NULL || buf.data == NULL) {
@@ -62,7 +62,7 @@ UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* request, uds_buf_t buf) {
         return UDS_NRC_IMLOIF;
     }
 
-    UDS_21_RDBLI_request* rQuery = (UDS_21_RDBLI_request*)request;
+    UDS_21_RDBLI_request_t* rQuery = (UDS_21_RDBLI_request_t*)request;
 
     //  Minimum length check
     if (buf.bufLen != 1) {
@@ -81,7 +81,7 @@ size_t x21_RDBLI_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
         return 0;
     }
 
-    const UDS_21_RDBLI_request* rQuery = (const UDS_21_RDBLI_request*)request;
+    const UDS_21_RDBLI_request_t* rQuery = (const UDS_21_RDBLI_request_t*)request;
 
     //  Sufficient buffer length check
     if (ret_buf.bufLen < 1) {

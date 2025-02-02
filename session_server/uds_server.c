@@ -2,9 +2,9 @@
 #include "../protocol/uds_negative_response.h"
 #include "../protocol/uds_services.h"
 
-void uds_server_init(uds_session_t* session, uds_lookup_function_t* services_table, size_t services_table_len) {
+void uds_server_init(uds_session_t* session, const uds_lookup_function_t* services_table, const size_t services_table_len) {
     session->security_level = UDS_PROTOCOL_DEFAULT_SESSION;
-    session->services_table = services_table;
+    session->services_table = (uds_lookup_function_t*)services_table;
     session->services_table_len = services_table_len;
     session->addl_struct = NULL;
 }

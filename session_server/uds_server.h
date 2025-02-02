@@ -43,7 +43,7 @@ typedef struct {
  * @param services_table 
  * @param services_table_len 
  */
-void uds_server_init(uds_session_t* session, uds_lookup_function_t* services_table, size_t services_table_len);
+void uds_server_init(uds_session_t* session, const uds_lookup_function_t* services_table, const size_t services_table_len);
 
 /**
  * @brief Recieves a full request buffer, processes it, and returns a response buffer
