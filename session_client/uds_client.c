@@ -78,5 +78,5 @@ bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, con
     if(service->clientDecodeResponse == NULL) { return false; }
 
     //  Call service method
-    return service->clientDecodeResponse(response_struct, response_buf);
+    return service->clientDecodeResponse(response_struct, offset_response);
 }
