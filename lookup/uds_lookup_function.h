@@ -43,7 +43,8 @@ typedef struct {
 typedef size_t(*uds_function_cb)(
     const uds_function_context_t* context,
     uds_response_data_t* uds_response,
-    uds_buffers_t buffers
+    uds_buffers_t buffers,
+    void* usrParameter
 );
 
 /**
@@ -76,7 +77,8 @@ size_t uds_lookup_function(const void* session,
                             const uds_lookup_function_t* table, 
                             const size_t table_len, 
                             uds_buffers_t buffers,
-                            bool* ret_found);
+                            bool* ret_found,
+                            void* usrParameter);
 
 #ifdef __cplusplus
 }

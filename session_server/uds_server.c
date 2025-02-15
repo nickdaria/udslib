@@ -6,13 +6,13 @@ void uds_server_init(uds_session_t* session, const uds_lookup_function_t* servic
     session->security_level = UDS_PROTOCOL_DEFAULT_SESSION;
     session->services_table = (uds_lookup_function_t*)services_table;
     session->services_table_len = services_table_len;
-    session->addl_struct = NULL;
+    session->usrParameter = NULL;
 }
 
 /*
     Under the hood, service lookup is just the same as a function lookup, but has special handling for the service ID byte and NACK responses
 */
-size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers) {
+size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers, void* usrParameter) {
     //  Build response
     uds_response_data_t uds_response = {
         .suppress_response = false,
@@ -36,7 +36,8 @@ size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers)
                                                     session->services_table,
                                                     session->services_table_len,
                                                     service_buffers,
-                                                    &service_found);
+                                                    &service_found,
+                                                    usrParameter);
 
     //  Override NACK code
     if(!service_found) {

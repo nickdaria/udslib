@@ -33,7 +33,7 @@ typedef struct {
      * @brief Allows the user to point to a custom struct for each session with additional/proprietary fields
      * 
      */
-    const void* addl_struct;
+    const void* usrParameter;
 } uds_session_t;
 
 /**
@@ -52,7 +52,7 @@ void uds_server_init(uds_session_t* session, const uds_lookup_function_t* servic
  * @param buffers Struct containing incoming request and a buffer for response (if any)
  * @return size_t 
  */
-size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers);
+size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers, void* usrParameter);
 
 #ifdef __cplusplus
 }

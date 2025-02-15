@@ -6,7 +6,8 @@ size_t function_run(const void* session,
                     const uint16_t resource_id, 
                     const uint8_t security_level,
                     const uds_lookup_function_t* function_entry, 
-                    uds_buffers_t buffers) 
+                    uds_buffers_t buffers,
+                    void* usrParameter) 
 {
     //  Function pointer not set
     if(function_entry == NULL || function_entry->function == NULL) {
@@ -24,11 +25,11 @@ size_t function_run(const void* session,
     uds_function_context_t uds_context = {
         .resource = &function_entry->base,
         .security_level = security_level,
-        .uds_session = (void*)session
+        .uds_session = (void*)session,
     };
 
     //  Run function
-    return function_entry->function(&uds_context, uds_response, buffers);
+    return function_entry->function(&uds_context, uds_response, buffers, usrParameter);
 }
 
 size_t uds_lookup_function(const void* session, 
@@ -38,7 +39,8 @@ size_t uds_lookup_function(const void* session,
                             const uds_lookup_function_t* table, 
                             const size_t table_len, 
                             uds_buffers_t buffers,
-                            bool* ret_found)
+                            bool* ret_found,
+                            void* usrParameter)
 {
     if(uds_response == NULL || table == NULL || buffers.request.data == NULL || buffers.response.data == NULL) {
         return 0;
@@ -47,7 +49,7 @@ size_t uds_lookup_function(const void* session,
     for(size_t i = 0; i < table_len; i++) {
         if(table[i].base.id == resource_id) {
             if(ret_found != NULL) { *ret_found = true; }
-            return function_run(session, uds_response, resource_id, security_level, &table[i], buffers);
+            return function_run(session, uds_response, resource_id, security_level, &table[i], buffers, usrParameter);
         }
     }
 

@@ -35,7 +35,7 @@ typedef struct {
     /**
      * @brief Pointer to user-defined struct for additional customization per-resource
      */
-    const void* addl_struct;
+    const void* usrParameter;
 } uds_resource_t;
 
 #ifdef __cplusplus
