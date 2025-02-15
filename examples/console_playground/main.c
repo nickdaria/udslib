@@ -131,7 +131,7 @@ void cmd_hexdata(const uint8_t* buf, const size_t bufLen) {
         .response = response_buf_s
     };
 
-    size_t response_len = uds_server_process_request(&session, uds_bufs);
+    size_t response_len = uds_server_process_request(&session, uds_bufs, NULL);
 
     printf("Response: ");
     for (size_t i = 0; i < response_len; i++) {
