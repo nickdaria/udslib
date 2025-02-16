@@ -13,6 +13,10 @@ void uds_server_init(uds_session_t* session, const uds_lookup_function_t* servic
     Under the hood, service lookup is just the same as a function lookup, but has special handling for the service ID byte and NACK responses
 */
 size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers, void* usrParameter) {
+    if(session == NULL) {
+        return 0;
+    }
+
     //  Build response
     uds_response_data_t uds_response = {
         .suppress_response = false,
