@@ -53,6 +53,7 @@ void x22_RDBI_serverPrepareResponse(const void* pRequest, void* pResponse, UdsBu
     if(ret_buf.data == NULL || ret_buf.bufLen < 2) {
         response->value_buf = NULL;
         response->value_len = 0;
+        return;
     }
 
     response->data_identifier = request->data_identifier;
