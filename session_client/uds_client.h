@@ -16,7 +16,7 @@ extern "C" {
  * @param buffers Buffer to place response into
  * @return size_t Size of request (or 0 if failed to generate due to missing function or buffer size contraints)
  */
-size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, const void* requestStruct, uds_buf_t ret_buf);
+size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, const void* requestStruct, UdsBuffer ret_buf);
 
 /**
  * @brief Called on a new message to get the service ID and instantiate the appropriate response struct type
@@ -24,7 +24,7 @@ size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, con
  * @param buf Buffer containing response data
  * @return UDS_SID_t Service ID (or 0xFF if invalid/no data)
  */
-UDS_SID_t uds_client_response_get_sid(const uds_buf_t buf);
+UDS_SID_t uds_client_response_get_sid(const UdsBuffer buf);
 
 /**
  * @brief Called after getting the SID of a response with that responses struct to load the response data into
@@ -35,7 +35,7 @@ UDS_SID_t uds_client_response_get_sid(const uds_buf_t buf);
  * @return true Successfully deoded response
  * @return false Failed to decode response (thrown by response method or calling method safeties)
  */
-bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, const uds_buf_t response_buf, void* response_struct);
+bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, const UdsBuffer response_buf, void* response_struct);
 
 #ifdef __cplusplus
 }

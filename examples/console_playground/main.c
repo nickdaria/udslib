@@ -5,13 +5,13 @@
 
 #include <udslib.h>
 
-size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
-size_t service_read_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
-size_t service_write_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
+size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers);
+size_t service_read_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers);
+size_t service_write_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers);
 
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers);
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers);
 
-uds_session_t session;
+UdsServer session;
 
 uint8_t test_8 = 0x12;
 uint16_t test_16 = 0x1234;
@@ -123,10 +123,10 @@ void cmd_help() {
 void cmd_hexdata(const uint8_t* buf, const size_t bufLen) {
     uint8_t response_buf[456];
 
-    uds_buf_t request_buf_s = { .data = (uint8_t*)buf, .bufLen = bufLen };
-    uds_buf_t response_buf_s = { .data = response_buf, .bufLen = sizeof(response_buf) };
+    UdsBuffer request_buf_s = { .data = (uint8_t*)buf, .bufLen = bufLen };
+    UdsBuffer response_buf_s = { .data = response_buf, .bufLen = sizeof(response_buf) };
 
-    uds_buffers_t uds_bufs = {
+    UdsBufferCollection uds_bufs = {
         .request = request_buf_s,
         .response = response_buf_s
     };
@@ -187,12 +187,12 @@ void usr_process_cmd(const uint8_t* buffer, const size_t length) {
     cmd_hexdata(hex_buffer, hex_len);
 }
 
-size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
+size_t service_diagnostic_session_control(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers) {
     printf("Diagnostic session control");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
     //  Get session
-    uds_session_t* session = (uds_session_t*)context->uds_session;
+    UdsServer* session = (UdsServer*)context->uds_session;
 
     //  Length check
     if(buffers.request.bufLen < 1) {
@@ -216,7 +216,7 @@ size_t service_diagnostic_session_control(const uds_function_context_t* context,
     return 1;
 }
 
-size_t service_read_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
+size_t service_read_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers) {
     printf("Read by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
@@ -234,14 +234,14 @@ size_t service_read_by_id(const uds_function_context_t* context, uds_response_da
     buffers.response.data[offset++] = local_id >> 8;
     buffers.response.data[offset++] = local_id & 0xFF;
 
-    uds_buf_t shifted_response_buf = uds_buf_offset(buffers.response, offset, NULL);
+    UdsBuffer shifted_response_buf = uds_buf_offset(buffers.response, offset, NULL);
 
     //  Find and return
     offset += uds_lookup_value_read(context->uds_session, uds_response, shifted_response_buf, local_id, context->security_level, values, sizeof(values) / sizeof(uds_lookup_value_t));
     return offset;
 }
 
-size_t service_write_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
+size_t service_write_by_id(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers) {
     printf("Write by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
@@ -255,21 +255,21 @@ size_t service_write_by_id(const uds_function_context_t* context, uds_response_d
     uint16_t local_id = (buffers.request.data[0] << 8) | buffers.request.data[1];
 
     //  Get buffer with response data
-    uds_buf_t shifted_request_data = uds_buf_offset(buffers.request, 2, NULL);
+    UdsBuffer shifted_request_data = uds_buf_offset(buffers.request, 2, NULL);
 
     //  Prepare response buffer
     size_t offset = 0;
     buffers.response.data[offset++] = local_id >> 8;
     buffers.response.data[offset++] = local_id & 0xFF;
 
-    uds_buf_t shifted_response_data = uds_buf_offset(buffers.response, offset, NULL);
+    UdsBuffer shifted_response_data = uds_buf_offset(buffers.response, offset, NULL);
 
     //  Find and write
     offset += uds_lookup_value_write(context->uds_session, uds_response, shifted_response_data, local_id, context->security_level, shifted_request_data, values, sizeof(values) / sizeof(uds_lookup_value_t));
     return offset;
 }
 
-size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, uds_buffers_t buffers) {
+size_t service_read_by_local_id(const uds_function_context_t* context, uds_response_data_t* uds_response, UdsBufferCollection buffers) {
     printf("Read by local id");
     printf(" - Security: %d, ID: %d, Name: %s\n", context->security_level, context->resource->id, context->resource->name);
 
@@ -280,7 +280,7 @@ size_t service_read_by_local_id(const uds_function_context_t* context, uds_respo
     size_t length_of_test_data = request.local_identifier;
     size_t length_of_test_resp = length_of_test_data + 1;
 
-    uds_buf_t response_buf = {
+    UdsBuffer response_buf = {
         .data = (uint8_t*)malloc(length_of_test_resp),
         .bufLen = length_of_test_resp
     };

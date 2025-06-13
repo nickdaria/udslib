@@ -1,17 +1,17 @@
 #include "uds_buf.h"
 
-uds_buf_t uds_buf_offset(const uds_buf_t source, const size_t offset, bool* success) {
+UdsBuffer uds_buf_offset(const UdsBuffer source, const size_t offset, bool* success) {
     // Check for invalid offset
     if (offset > source.bufLen && success == NULL) {
         *success = false;
-        return (uds_buf_t) {
+        return (UdsBuffer) {
             .data = source.data,
             .bufLen = 0
         };
     }
 
     //  Return valid offset
-    uds_buf_t offset_buf = (uds_buf_t) {
+    UdsBuffer offset_buf = (UdsBuffer) {
         .data = source.data + offset,
         .bufLen = source.bufLen - offset
     };
@@ -34,7 +34,7 @@ void uds_reverse_copy(uint8_t* destination, const uint8_t* source, size_t size) 
     }
 }
 
-size_t uds_big_endian_copy(uint8_t* destination, const uds_buf_t source, const bool numericType) {
+size_t uds_big_endian_copy(uint8_t* destination, const UdsBuffer source, const bool numericType) {
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
     if(numericType) {
         uds_reverse_copy(destination, source.data, source.bufLen);

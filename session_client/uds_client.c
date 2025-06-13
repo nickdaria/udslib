@@ -1,7 +1,7 @@
 #include "uds_client.h"
 #include "../protocol/uds_protocol.h"
 
-size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, const void* requestStruct, uds_buf_t ret_buf) {
+size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, const void* requestStruct, UdsBuffer ret_buf) {
     //  Safety
     if(service == NULL || requestStruct == NULL || ret_buf.data == NULL || ret_buf.bufLen == 0) {
         return 0;
@@ -19,7 +19,7 @@ size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, con
     ret_buf.data[offset++] = service->sid;
 
     //  Offset return buffer
-    uds_buf_t serviceBuf = uds_buf_offset(ret_buf, offset, NULL);
+    UdsBuffer serviceBuf = uds_buf_offset(ret_buf, offset, NULL);
 
     //  Execute request
     size_t svcRet = service->clientEncodeRequest(requestStruct, serviceBuf);
@@ -34,7 +34,7 @@ size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, con
     return offset;
 }
 
-UDS_SID_t uds_client_response_get_sid(const uds_buf_t buf) 
+UDS_SID_t uds_client_response_get_sid(const UdsBuffer buf) 
 {
     //  Safety
     if(buf.bufLen < 1) {
@@ -58,7 +58,7 @@ UDS_SID_t uds_client_response_get_sid(const uds_buf_t buf)
     return (UDS_SID_t)0xFF;
 }
 
-bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, const uds_buf_t response_buf, void* response_struct) 
+bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, const UdsBuffer response_buf, void* response_struct) 
 {
     //  Safety
     if(response_struct == NULL || response_buf.data == NULL) { return false; }
@@ -71,7 +71,7 @@ bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, con
 
     //  Offset buffer for data-only service code
     bool offset_ok;
-    uds_buf_t offset_response = uds_buf_offset(response_buf, 1, &offset_ok);
+    UdsBuffer offset_response = uds_buf_offset(response_buf, 1, &offset_ok);
     if(!offset_ok) { return false; }
 
     //  Verify service method exists

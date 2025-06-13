@@ -19,7 +19,7 @@ typedef struct {
 
 typedef struct {
     UDS_21_RDBLI_request_t request;
-    uds_buf_t value;
+    UdsBuffer value;
     size_t value_len;
 } UDS_21_RDBLI_response_t;
 

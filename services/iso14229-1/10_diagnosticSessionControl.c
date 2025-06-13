@@ -1,6 +1,6 @@
 #include "10_diagnosticSessionControl.h"
 
-size_t x10_DSC_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
+size_t x10_DSC_serverEncodeResponse(const void* response, UdsBuffer ret_buf) {
     const UDS_10_DSC_response_t* rResponse = (const UDS_10_DSC_response_t*)response;
 
     // Safety check
@@ -17,7 +17,7 @@ size_t x10_DSC_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
     return response_len;
 }
 
-bool x10_DSC_clientDecodeResponse(void* response, const uds_buf_t buf) {
+bool x10_DSC_clientDecodeResponse(void* response, const UdsBuffer buf) {
     UDS_10_DSC_response_t* rResponse = (UDS_10_DSC_response_t*)response;
 
     // Safety check
@@ -31,7 +31,7 @@ bool x10_DSC_clientDecodeResponse(void* response, const uds_buf_t buf) {
     return true;
 }
 
-UDS_NRC_t x10_DSC_serverDecodeRequest(void* request, const uds_buf_t buf) {
+UDS_NRC_t x10_DSC_serverDecodeRequest(void* request, const UdsBuffer buf) {
     UDS_10_DSC_request_t* rQuery = (UDS_10_DSC_request_t*)request;
 
     // Safety check
@@ -50,7 +50,7 @@ UDS_NRC_t x10_DSC_serverDecodeRequest(void* request, const uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x10_DSC_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
+size_t x10_DSC_clientEncodeRequest(const void* request, UdsBuffer ret_buf) {
     const UDS_10_DSC_request_t* rQuery = (const UDS_10_DSC_request_t*)request;
 
     // Safety check

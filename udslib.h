@@ -17,7 +17,6 @@ extern "C" {
 #include "session_client/uds_client.h"
 #include "protocol/uds_protocol.h"
 #include "services/uds_std_services.h"
-#include "lookup/uds_lookup_value.h"
 #include "lookup/uds_lookup_function.h"
 
 #define UDSLIB_VERSION_MAJOR         0

@@ -30,7 +30,7 @@ typedef struct {
     const uint8_t security_level;
 
     /**
-     * @brief Pointer to uds_session_t for the current session
+     * @brief Pointer to UdsServer for the current session
      * 
      */
     void* uds_session;
@@ -43,7 +43,7 @@ typedef struct {
 typedef size_t(*uds_function_cb)(
     const uds_function_context_t* context,
     uds_response_data_t* uds_response,
-    uds_buffers_t buffers,
+    UdsBufferCollection buffers,
     void* usrParameter
 );
 
@@ -76,7 +76,7 @@ size_t uds_lookup_function(const void* session,
                             const uint8_t security_level, 
                             const uds_lookup_function_t* table, 
                             const size_t table_len, 
-                            uds_buffers_t buffers,
+                            UdsBufferCollection buffers,
                             bool* ret_found,
                             void* usrParameter);
 

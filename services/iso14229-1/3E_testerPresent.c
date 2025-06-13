@@ -1,6 +1,6 @@
 #include "3E_testerPresent.h"
 
-size_t x3E_TP_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
+size_t x3E_TP_serverEncodeResponse(const void* response, UdsBuffer ret_buf) {
     const UDS_3E_TP_response_t* rResponse = (const UDS_3E_TP_response_t*)response;
 
     // Safety checks
@@ -22,7 +22,7 @@ size_t x3E_TP_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
     return response_len;
 }
 
-bool x3E_TP_clientDecodeResponse(void* response, const uds_buf_t buf) {
+bool x3E_TP_clientDecodeResponse(void* response, const UdsBuffer buf) {
     UDS_3E_TP_response_t* rResponse = (UDS_3E_TP_response_t*)response;
 
     // Safety
@@ -36,7 +36,7 @@ bool x3E_TP_clientDecodeResponse(void* response, const uds_buf_t buf) {
     return true;
 }
 
-UDS_NRC_t x3E_TP_serverDecodeRequest(void* request, const uds_buf_t buf) {
+UDS_NRC_t x3E_TP_serverDecodeRequest(void* request, const UdsBuffer buf) {
     UDS_3E_TP_request_t* rQuery = (UDS_3E_TP_request_t*)request;
 
     // Safety checks
@@ -55,7 +55,7 @@ UDS_NRC_t x3E_TP_serverDecodeRequest(void* request, const uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x3E_TP_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
+size_t x3E_TP_clientEncodeRequest(const void* request, UdsBuffer ret_buf) {
     const UDS_3E_TP_request_t* rQuery = (const UDS_3E_TP_request_t*)request;
 
     // Safety checks

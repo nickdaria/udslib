@@ -8,6 +8,7 @@ extern "C" {
 #include <stddef.h>
 
 #include "../protocol/uds_protocol.h"
+#include "../services/uds_service_framework.h"
 #include "../lookup/uds_lookup_function.h"
 
 typedef struct {
@@ -21,7 +22,7 @@ typedef struct {
      * @brief Pointer to array of services to look up
      * 
      */
-    uds_lookup_function_t* services_table;
+    const UdsServiceHandlerEntry* services_table;
 
     /**
      * @brief Number of entries in the service table
@@ -34,7 +35,7 @@ typedef struct {
      * 
      */
     const void* usrParameter;
-} uds_session_t;
+} UdsServer;
 
 /**
  * @brief Helper function to initialize a UDS session. You can also just populate the struct manually.
@@ -43,7 +44,7 @@ typedef struct {
  * @param services_table 
  * @param services_table_len 
  */
-void uds_server_init(uds_session_t* session, const uds_lookup_function_t* services_table, const size_t services_table_len);
+void uds_server_init(UdsServer* session, const UdsServiceHandlerEntry* services_table, const size_t services_table_len);
 
 /**
  * @brief Recieves a full request buffer, processes it, and returns a response buffer
@@ -52,7 +53,7 @@ void uds_server_init(uds_session_t* session, const uds_lookup_function_t* servic
  * @param buffers Struct containing incoming request and a buffer for response (if any)
  * @return size_t 
  */
-size_t uds_server_process_request(uds_session_t* session, uds_buffers_t buffers, void* usrParameter);
+size_t uds_server_process_request(UdsServer* session, UdsBufferCollection buffers, void* usrParameter);
 
 #ifdef __cplusplus
 }

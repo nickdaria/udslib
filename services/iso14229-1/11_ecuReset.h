@@ -39,11 +39,18 @@ typedef struct {
     //  (PDT) Power Down Time
 	//	0-254s, 0xFF = failure or time not available
     size_t powerDownTime;
-} UDS_11_ER_request_t;
+} UDS_11_ER_Request;
 
 typedef struct {
-	UDS_11_ER_request_t request;
-} UDS_11_ER_response;
+	//  (UDS_11_ER_LEV_RT_t) Reset Type
+	//	- subfunction = reset type
+	//	- suppressPosRspMsgIndicationBit
+    UDS_SUBFUNC_LV_t resetType;
+
+    //  (PDT) Power Down Time
+	//	0-254s, 0xFF = failure or time not available
+    size_t powerDownTime;
+} UDS_11_ER_Response;
 
 extern UDS_SERVICE_IMPLEMENTATION_t UDS_11_ER;
 

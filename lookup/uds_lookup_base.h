@@ -26,13 +26,6 @@ typedef struct {
     const char* name;
 
     /**
-     * @brief Security level required to access this resource
-     *  0 = Disabled/Inaccessible
-     *  1 = Default session
-     */
-    const uint8_t security_level;
-
-    /**
      * @brief Pointer to user-defined struct for additional customization per-resource
      */
     const void* usrParameter;

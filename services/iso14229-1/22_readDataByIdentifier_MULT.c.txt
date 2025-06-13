@@ -1,6 +1,6 @@
 #include "22_readDataByIdentifer.h"
 
-size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
+size_t x22_RDBI_serverEncodeResponse(const void* response, UdsBuffer ret_buf) {
     const UDS_22_RDBI_response* rResponse = (const UDS_22_RDBI_response*)response;
 
     //  Safety
@@ -38,7 +38,7 @@ size_t x22_RDBI_serverEncodeResponse(const void* response, uds_buf_t ret_buf) {
     return offset;
 }
 
-size_t x22_RDBI_clientGetNextDID(const uds_buf_t* buf, uint16_t* ret_DID) {
+size_t x22_RDBI_clientGetNextDID(const UdsBuffer* buf, uint16_t* ret_DID) {
     //  Safety
     if(buf == NULL || ret_DID == NULL) {
         return 0;
@@ -56,7 +56,7 @@ size_t x22_RDBI_clientGetNextDID(const uds_buf_t* buf, uint16_t* ret_DID) {
     return 2;
 }
 
-size_t x22_RDBI_clientGetNextValue(const uds_buf_t* buf, const size_t DID_size, uds_buf_t* ret_value) {
+size_t x22_RDBI_clientGetNextValue(const UdsBuffer* buf, const size_t DID_size, UdsBuffer* ret_value) {
     //  Safety
     if(buf == NULL || ret_value->data == NULL) {
         return 0;
@@ -81,7 +81,7 @@ size_t x22_RDBI_clientGetNextValue(const uds_buf_t* buf, const size_t DID_size, 
     return DID_size;
 }
 
-UDS_NRC_t x22_RDBI_serverDecodeRequest(void* request, const uds_buf_t buf) {
+UDS_NRC_t x22_RDBI_serverDecodeRequest(void* request, const UdsBuffer buf) {
     UDS_22_RDBI_request* rQuery = (UDS_22_RDBI_request*)request;
 
     //  Safety
@@ -114,7 +114,7 @@ UDS_NRC_t x22_RDBI_serverDecodeRequest(void* request, const uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x22_RDBI_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
+size_t x22_RDBI_clientEncodeRequest(const void* request, UdsBuffer ret_buf) {
     const UDS_22_RDBI_request* rQuery = (const UDS_22_RDBI_request*)request;
 
     //  DID argument check

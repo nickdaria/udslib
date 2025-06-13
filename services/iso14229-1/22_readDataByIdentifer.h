@@ -11,25 +11,16 @@ extern "C" {
 #include <stdbool.h>
 
 /*
-    Read Data By Identifier (0x22)
+    Read Data By Identifier (0x22) - Single PID implementation
         https://piembsystech.com/read-data-by-identifier-0x22-service-in-uds-protocol/
 
         [Accepts]
-        - Data Identifier (DID) or list of DIDs
+        - 1 Data Identifier (DID)
 
         [Response]
-        - List of DIDs and data
+        - DID and response data
 
         [Order of operations (ISO)]
-        - Decode the request
-        - Fulfill each ID
-            - If the ID is not supported, simply omit from result
-            - If the ID is not authorized, return NRC 0x33
-            - If the ID condition check is not okay, return NRC 0x22
-        - Encode the response
-            - If no IDs were fulfilled, return NRC 0x31
-            - If total response length is too long, return NRC 0x14
-        - Send the response
 
         [NACK Response]
         - 0x13: Length of message is invalid or too many requests at once
@@ -41,22 +32,21 @@ extern "C" {
 
 typedef struct {
     //  Identifier data array & data length array
-    uint16_t* data_identifier;
-
-    //  Count of elements
-    size_t elements_count;
-
-    //  Total size of allocated space
-    size_t elements_size;
-} UDS_22_RDBI_request;
+    uint16_t data_identifier;
+} UDS_22_RDBI_Request;
 
 typedef struct {
-    //  Associated request
-    UDS_22_RDBI_request request;
+    /// @brief PID
+    uint16_t data_identifier;
 
-    //  Data
-    uds_buf_t* data_identifier_value;
-} UDS_22_RDBI_response;
+    /// @brief Pointer to data to copy
+    /// @note In callback, this is set the UDS buffer location in case you need to dynamically generate data instead of pointing to an existing buffer
+    uint8_t* value_buf;
+
+    /// @brief Length of data
+    /// @note In callback, this is set the available UDS buffer size to use
+    size_t value_len;
+} UDS_22_RDBI_Response;
 
 extern UDS_SERVICE_IMPLEMENTATION_t UDS_22_RDBI;
 

@@ -1,6 +1,6 @@
 #include "21_readDataByLocalIdentifier.h"
 
-size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, uds_buf_t ret_buf) {
+size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, UdsBuffer ret_buf) {
     const UDS_21_RDBLI_response_t* rResponse = (const UDS_21_RDBLI_response_t*)response;
 
     //  Safety
@@ -26,7 +26,7 @@ size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, uds_buf_t re
     return offset;
 }
 
-bool x21_RDBLI_decodePositiveResponse(void* response, uds_buf_t buf) {
+bool x21_RDBLI_decodePositiveResponse(void* response, UdsBuffer buf) {
     UDS_21_RDBLI_response_t* rResponse = (UDS_21_RDBLI_response_t*)response;
 
     //  Safety
@@ -56,7 +56,7 @@ bool x21_RDBLI_decodePositiveResponse(void* response, uds_buf_t buf) {
     return true;
 }
 
-UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* request, uds_buf_t buf) {
+UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* request, UdsBuffer buf) {
     //  Safety
     if(request == NULL || buf.data == NULL) {
         return UDS_NRC_IMLOIF;
@@ -75,7 +75,7 @@ UDS_NRC_t x21_RDBLI_serverDecodeRequest(void* request, uds_buf_t buf) {
     return UDS_NRC_PR;
 }
 
-size_t x21_RDBLI_clientEncodeRequest(const void* request, uds_buf_t ret_buf) {
+size_t x21_RDBLI_clientEncodeRequest(const void* request, UdsBuffer ret_buf) {
     //  Safety
     if(request == NULL || ret_buf.data == NULL) {
         return 0;
