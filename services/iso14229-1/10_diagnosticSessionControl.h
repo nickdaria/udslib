@@ -40,15 +40,15 @@ typedef enum {
 
 typedef struct {
 	//  Subfunction: Desired session level
-    //  * NOTE: This struct breaks out the supression bit for the response message, but some OEMs do not use it. In that case, just encode and decode the struct as it's used
+    //  * NOTE: This struct breaks out the supression bit for the response message, but some OEMs do not use it. In that case, use desiredSessionLevel.raw instead of .protocol
     UDS_SUBFUNC_LV_t desiredSessionLevel;
 
     //  TODO: Implement session parameter record support
-} UDS_10_DSC_request_t;
+} UDS_10_DSC_Request;
 
 typedef struct {
-	UDS_10_DSC_request_t request;
-} UDS_10_DSC_response_t;
+    UDS_SUBFUNC_LV_t desiredSessionLevel;
+} UDS_10_DSC_Response;
 
 extern UDS_SERVICE_IMPLEMENTATION_t UDS_10_DSC;
 

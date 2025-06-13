@@ -13,11 +13,11 @@ typedef struct {
     UDS_SUBFUNC_LV_t subfunction;
 
     //  TODO: Implement session parameter record support
-} UDS_3E_TP_request_t;
+} UDS_3E_TP_Request;
 
 typedef struct {
-	UDS_3E_TP_request_t request;
-} UDS_3E_TP_response_t;
+    UDS_SUBFUNC_LV_t subfunction;
+} UDS_3E_TP_Response;
 
 extern UDS_SERVICE_IMPLEMENTATION_t UDS_3E_TP;
 

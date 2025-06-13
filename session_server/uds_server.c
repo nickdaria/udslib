@@ -3,7 +3,7 @@
 #include "../protocol/uds_services.h"
 #include <string.h>  // for memset
 
-static const UdsServiceHandlerEntry* find_handler_entry(const UdsServer* session, uint8_t service_id) {
+static const UdsServiceHandlerEntry* find_handler_entry(const UdsSession* session, uint8_t service_id) {
     for (size_t i = 0; i < session->services_table_len; i++) {
         const UdsServiceHandlerEntry* entry = &session->services_table[i];
         if (entry && entry->implementation && entry->implementation->sid == service_id) {
@@ -26,14 +26,14 @@ static size_t build_positive_response(UdsBuffer response, uint8_t original_sid, 
     return payload_len + 1;
 }
 
-void uds_server_init(UdsServer* session, const UdsServiceHandlerEntry* services_table, const size_t services_table_len) {
+void uds_server_init(UdsSession* session, const UdsServiceHandlerEntry* services_table, const size_t services_table_len) {
     session->security_level = UDS_PROTOCOL_DEFAULT_SESSION;
     session->services_table = services_table;
     session->services_table_len = services_table_len;
     session->usrParameter = NULL;
 }
 
-size_t uds_server_process_request(UdsServer* session, UdsBufferCollection buffers, void* usrParameter) {
+size_t uds_server_process_request(UdsSession* session, UdsBufferCollection buffers, void* usrParameter) {
     if (!session || !buffers.request.data || buffers.request.bufLen < 1) {
         return 0;
     }
@@ -75,7 +75,7 @@ size_t uds_server_process_request(UdsServer* session, UdsBufferCollection buffer
     }
 
     // Handle
-    UDS_NRC_t handler_result = handler_entry->request(requestStruct, responseStruct, usrParameter);
+    UDS_NRC_t handler_result = handler_entry->request(session, requestStruct, responseStruct, usrParameter);
     if (handler_result != UDS_NRC_PR) {
         return build_negative_response(buffers.response, service_id, handler_result);
     }

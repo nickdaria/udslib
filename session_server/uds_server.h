@@ -35,7 +35,7 @@ typedef struct {
      * 
      */
     const void* usrParameter;
-} UdsServer;
+} UdsSession;
 
 /**
  * @brief Helper function to initialize a UDS session. You can also just populate the struct manually.
@@ -44,7 +44,7 @@ typedef struct {
  * @param services_table 
  * @param services_table_len 
  */
-void uds_server_init(UdsServer* session, const UdsServiceHandlerEntry* services_table, const size_t services_table_len);
+void uds_server_init(UdsSession* session, const UdsServiceHandlerEntry* services_table, const size_t services_table_len);
 
 /**
  * @brief Recieves a full request buffer, processes it, and returns a response buffer
@@ -53,7 +53,7 @@ void uds_server_init(UdsServer* session, const UdsServiceHandlerEntry* services_
  * @param buffers Struct containing incoming request and a buffer for response (if any)
  * @return size_t 
  */
-size_t uds_server_process_request(UdsServer* session, UdsBufferCollection buffers, void* usrParameter);
+size_t uds_server_process_request(UdsSession* session, UdsBufferCollection buffers, void* usrParameter);
 
 #ifdef __cplusplus
 }

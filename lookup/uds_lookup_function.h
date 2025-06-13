@@ -30,7 +30,7 @@ typedef struct {
     const uint8_t security_level;
 
     /**
-     * @brief Pointer to UdsServer for the current session
+     * @brief Pointer to UdsSession for the current session
      * 
      */
     void* uds_session;

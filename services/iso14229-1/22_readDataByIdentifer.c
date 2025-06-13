@@ -46,6 +46,10 @@ void x22_RDBI_serverPrepareResponse(const void* pRequest, void* pResponse, UdsBu
     const UDS_22_RDBI_Request* request = (const UDS_22_RDBI_Request*)pRequest;
     UDS_22_RDBI_Response* response = (UDS_22_RDBI_Response*)pResponse;
 
+    if(!request || !response) {
+        return;
+    }
+
     if(ret_buf.data == NULL || ret_buf.bufLen < 2) {
         response->value_buf = NULL;
         response->value_len = 0;

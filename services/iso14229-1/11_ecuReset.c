@@ -51,6 +51,18 @@ bool x11_ER_clientDecodeResponse(void* outResponse, const UdsBuffer buf) {
     return true;
 }
 
+void x11_ER_serverPrepareResponse(const void* pRequest, void* pResponse, UdsBuffer ret_buf) {
+    const UDS_11_ER_Request* request = (const UDS_11_ER_Request*)pRequest;
+    UDS_11_ER_Response* response = (UDS_11_ER_Response*)pResponse;
+
+    if(!request || !response) {
+        return;
+    }
+
+    response->powerDownTime = request->powerDownTime;
+    response->resetType = response->resetType;
+}
+
 size_t x11_ER_serverEncodeResponse(const void* pRequest, const void* pResponse, UdsBuffer ret_buf) {
     const UDS_11_ER_Request* request = (const UDS_11_ER_Request*)pRequest;
     const UDS_11_ER_Response* response = (const UDS_11_ER_Response*)pResponse;
@@ -69,6 +81,11 @@ size_t x11_ER_serverEncodeResponse(const void* pRequest, const void* pResponse, 
     //  Power Down Time (if ERPSD)
     if(response->resetType.protocol.subfunction == UDS_ER_LEV_RT_ECU_RESET_ERPSD && ret_buf.bufLen >= 2) {
         ret_buf.data[response_len++] = response->powerDownTime;
+    }
+
+    //  No response bit
+    if(request->resetType.protocol.suppressPosRspMsgIndicationBit) {
+        return 0;
     }
 
     return response_len;
@@ -109,7 +126,7 @@ UDS_SERVICE_IMPLEMENTATION_t UDS_11_ER = {
     .pResponseSize = sizeof(UDS_11_ER_Response),
     .clientDecodeResponse = x11_ER_clientDecodeResponse,
     .clientEncodeRequest = x11_ER_clientEncodeRequest,
-    .serverPrepareResponse = NULL,
+    .serverPrepareResponse = x11_ER_serverPrepareResponse,
     .serverEncodeResponse = x11_ER_serverEncodeResponse,
     .serverDecodeRequest = x11_ER_serverDecodeRequest
 };

@@ -53,7 +53,7 @@ typedef struct {
     const UDS_NRC_t (*serverDecodeRequest)(void* outRequest, const UdsBuffer buf);
 } UDS_SERVICE_IMPLEMENTATION_t;
 
-typedef UDS_NRC_t (*UdsServiceHandlerCallback)(const void* request_struct, void* response_struct, void* usrParam);
+typedef UDS_NRC_t (*UdsServiceHandlerCallback)(void* session_context, const void* request_struct, void* response_struct, void* usrParam);
 
 typedef struct {
     /// @brief Function to call when this service recieves a request
