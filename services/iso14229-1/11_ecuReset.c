@@ -60,7 +60,7 @@ void x11_ER_serverPrepareResponse(const void* pRequest, void* pResponse, UdsBuff
     }
 
     response->powerDownTime = request->powerDownTime;
-    response->resetType = response->resetType;
+    response->resetType = request->resetType;
 }
 
 size_t x11_ER_serverEncodeResponse(const void* pRequest, const void* pResponse, UdsBuffer ret_buf) {
