@@ -8,6 +8,7 @@ extern "C" {
 #include "iso14229-1/11_ecuReset.h"
 #include "iso14229-3/21_readDataByLocalIdentifier.h"
 #include "iso14229-1/22_readDataByIdentifer.h"
+#include "iso14229-1/2E_writeDataByIdentifier.h"
 #include "iso14229-1/31_routineControl.h"
 #include "iso14229-1/3E_testerPresent.h"
 #include "iso14229-1/7F_NACK.h"
