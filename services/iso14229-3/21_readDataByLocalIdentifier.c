@@ -1,7 +1,7 @@
 #include "21_readDataByLocalIdentifier.h"
 
-size_t x21_RDBLI_serverEncodePositiveResponse(const void* response, UdsBuffer ret_buf) {
-    const UDS_21_RDBLI_response_t* rResponse = (const UDS_21_RDBLI_response_t*)response;
+size_t x21_RDBLI_serverEncodePositiveResponse(const void* pRequest, const void* pResponse, UdsBuffer ret_buf) {
+    const UDS_21_RDBLI_response_t* rResponse = (const UDS_21_RDBLI_response_t*)pResponse;
 
     //  Safety
     if(rResponse == NULL || rResponse->value.data == NULL || ret_buf.data == NULL) {

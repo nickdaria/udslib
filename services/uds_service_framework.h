@@ -26,31 +26,31 @@ typedef struct {
      * @brief Encodes a request to be sent to a server
      * 
      */
-    const size_t (*clientEncodeRequest)(const void* pRequest, UdsBuffer ret_buf);
+    size_t (*clientEncodeRequest)(const void* pRequest, UdsBuffer ret_buf);
 
     /**
      * @brief Decodes a response from a server
      * 
      */
-    const bool (*clientDecodeResponse)(void* outResponse, const UdsBuffer buf);
+    bool (*clientDecodeResponse)(void* outResponse, const UdsBuffer buf);
 
     /**
      * @brief 
      * 
      */
-    const void (*serverPrepareResponse)(const void* pRequest, void* pResponse, UdsBuffer ret_buf);
+    void (*serverPrepareResponse)(const void* pRequest, void* pResponse, UdsBuffer ret_buf);
 
     /**
      * @brief 
      * 
      */
-    const size_t (*serverEncodeResponse)(const void* pRequest, const void* pResponse, UdsBuffer ret_buf);
+    size_t (*serverEncodeResponse)(const void* pRequest, const void* pResponse, UdsBuffer ret_buf);
 
     /**
      * @brief 
      * 
      */
-    const UDS_NRC_t (*serverDecodeRequest)(void* outRequest, const UdsBuffer buf);
+    UDS_NRC_t (*serverDecodeRequest)(void* outRequest, const UdsBuffer buf);
 } UDS_SERVICE_IMPLEMENTATION_t;
 
 typedef UDS_NRC_t (*UdsServiceHandlerCallback)(void* session_context, const void* request_struct, void* response_struct, void* usrParam);
