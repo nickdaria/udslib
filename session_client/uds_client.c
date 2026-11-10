@@ -23,12 +23,14 @@ size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, con
 
     //  Execute request
     size_t svcRet = service->clientEncodeRequest(requestStruct, serviceBuf);
-    offset += svcRet;
 
     //  Check for error
-    if(svcRet == 0) {
+    if(svcRet == SIZE_MAX || (svcRet == 0 && !service->emptyRequestPayloadAllowed) ||
+       svcRet > serviceBuf.bufLen) {
         return 0;
     }
+
+    offset += svcRet;
 
     //  Return total size
     return offset;
@@ -37,7 +39,7 @@ size_t uds_client_build_request(const UDS_SERVICE_IMPLEMENTATION_t* service, con
 UDS_SID_t uds_client_response_get_sid(const UdsBuffer buf) 
 {
     //  Safety
-    if(buf.bufLen < 1) {
+    if(!buf.data || buf.bufLen < 1) {
         return (UDS_SID_t)0xFF;
     }
 
@@ -61,13 +63,13 @@ UDS_SID_t uds_client_response_get_sid(const UdsBuffer buf)
 bool uds_client_response_decode(const UDS_SERVICE_IMPLEMENTATION_t* service, const UdsBuffer response_buf, void* response_struct) 
 {
     //  Safety
-    if(response_struct == NULL || response_buf.data == NULL) { return false; }
+    if(service == NULL || response_struct == NULL || response_buf.data == NULL) { return false; }
 
     //  SID
     UDS_SID_t sid = uds_client_response_get_sid(response_buf);
 
     //  Safety
-    if(sid == (UDS_SID_t)0xFF) { return false; }
+    if(sid == (UDS_SID_t)0xFF || sid != service->sid) { return false; }
 
     //  Offset buffer for data-only service code
     bool offset_ok;

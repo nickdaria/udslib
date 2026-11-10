@@ -2,8 +2,8 @@
 
 UdsBuffer uds_buf_offset(const UdsBuffer source, const size_t offset, bool* success) {
     // Check for invalid offset
-    if (offset > source.bufLen && success == NULL) {
-        *success = false;
+    if (offset > source.bufLen) {
+        if (success != NULL) { *success = false; }
         return (UdsBuffer) {
             .data = source.data,
             .bufLen = 0

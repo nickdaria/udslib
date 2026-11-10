@@ -34,7 +34,8 @@ void uds_server_init(UdsSession* session, const UdsServiceHandlerEntry* services
 }
 
 size_t uds_server_process_request(UdsSession* session, UdsBufferCollection buffers, void* usrParameter) {
-    if (!session || !buffers.request.data || buffers.request.bufLen < 1) {
+    if (!session || !buffers.request.data || buffers.request.bufLen < 1 ||
+        !buffers.response.data || buffers.response.bufLen < 3) {
         return 0;
     }
 
@@ -82,7 +83,9 @@ size_t uds_server_process_request(UdsSession* session, UdsBufferCollection buffe
 
     // Encode response
     size_t payload_len = impl->serverEncodeResponse(requestStruct, responseStruct, service_buffers.response);
-    if (payload_len == 0) {
+    if (payload_len == SIZE_MAX ||
+        (payload_len == 0 && !impl->emptyResponsePayloadAllowed) ||
+        payload_len > service_buffers.response.bufLen) {
         return build_negative_response(buffers.response, service_id, UDS_NRC_GENERAL_PROGRAMMING_FAILURE);
     }
 

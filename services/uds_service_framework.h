@@ -51,6 +51,11 @@ typedef struct {
      * 
      */
     UDS_NRC_t (*serverDecodeRequest)(void* outRequest, const UdsBuffer buf);
+
+    /* Some services (notably 0x37) have a valid empty payload. For these
+       services SIZE_MAX signals an encoding error; zero is a valid length. */
+    bool emptyRequestPayloadAllowed;
+    bool emptyResponsePayloadAllowed;
 } UDS_SERVICE_IMPLEMENTATION_t;
 
 typedef UDS_NRC_t (*UdsServiceHandlerCallback)(void* session_context, const void* request_struct, void* response_struct, void* usrParam);

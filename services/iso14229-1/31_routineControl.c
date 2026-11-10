@@ -1,4 +1,5 @@
 #include "31_routineControl.h"
+#include <string.h>
 
 size_t x31_RC_clientEncodeRequest(const void* pRequest, UdsBuffer ret_buf) {
     const UDS_31_RC_Request* request = (const UDS_31_RC_Request*)pRequest;
